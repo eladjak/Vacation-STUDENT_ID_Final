@@ -1,70 +1,127 @@
-# Getting Started with Create React App
+# נערכת ניהול חופשות
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+מערכת לניהול חופשות המאפשרת למשתמשים לצפות, לעקוב ולנהל חופשות. המערכת כוללת ממשק משתמש ידידותי, ניהול הרשאות, ותצוגת סטטיסטיקות למנהלים.
 
-## Available Scripts
+## תכונות עיקריות
 
-In the project directory, you can run:
+- 🔐 מערכת הרשאות (משתמשים רגילים ומנהלים)
+- 📱 ממשק משתמש רספונסיבי
+- 🎨 עיצוב מודרני ונקי
+- 📊 סטטיסטיקות ודוחות למנהלים
+- ❤️ מעקב אחר חופשות מועדפות
+- 🌐 תמיכה מלאה בעברית ו-RTL
 
-### `npm start`
+## טכנולוגיות
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### צד לקוח
+- React
+- TypeScript
+- Material-UI (MUI)
+- Redux Toolkit
+- React Router
+- Axios
+- Chart.js
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### צד שרת
+- Node.js
+- Express
+- TypeScript
+- TypeORM
+- MySQL
+- JWT
+- Multer
 
-### `npm test`
+## התקנה
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### דרישות מקדימות
+- Node.js (גרסה 18 ומעלה)
+- MySQL (גרסה 8 ומעלה)
 
-### `npm run build`
+### שלבי התקנה
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. שכפל את המאגר:
+\`\`\`bash
+git clone https://github.com/YOUR_USERNAME/vacation-management.git
+cd vacation-management
+\`\`\`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. התקן את הספריות הנדרשות:
+\`\`\`bash
+# התקנת ספריות צד לקוח
+cd client
+npm install
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# התקנת ספריות צד שרת
+cd ../server
+npm install
+\`\`\`
 
-### `npm run eject`
+3. הגדר את קובץ ה-.env בתיקיית השרת:
+\`\`\`env
+PORT=3001
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=your_password
+DB_DATABASE=vacation_db
+JWT_SECRET=your_secret_key
+CLIENT_URL=http://localhost:3000
+\`\`\`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+4. צור את בסיס הנתונים והזן נתוני דוגמה:
+\`\`\`bash
+cd server
+npm run seed
+\`\`\`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+5. הפעל את השרת:
+\`\`\`bash
+npm run dev
+\`\`\`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+6. הפעל את הלקוח:
+\`\`\`bash
+cd ../client
+npm start
+\`\`\`
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## משתמשי ברירת מחדל
 
-## Learn More
+### מנהל
+- אימייל: admin@test.com
+- סיסמה: 123456
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### משתמש רגיל
+- אימייל: user@test.com
+- סיסמה: 123456
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## מבנה הפרויקט
 
-### Code Splitting
+\`\`\`
+vacation-management/
+├── client/                # צד לקוח
+│   ├── public/           # קבצים סטטיים
+│   └── src/              # קוד מקור
+│       ├── components/   # רכיבי React
+│       ├── services/     # שירותי API
+│       ├── store/        # ניהול מצב (Redux)
+│       └── types/        # טיפוסי TypeScript
+│
+└── server/               # צד שרת
+    ├── src/             # קוד מקור
+    │   ├── config/      # הגדרות
+    │   ├── controllers/ # בקרים
+    │   ├── entities/    # ישויות TypeORM
+    │   ├── middleware/  # middleware
+    │   ├── routes/      # נתיבי API
+    │   └── utils/       # כלי עזר
+    └── uploads/         # קבצים שהועלו
+\`\`\`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## תרומה לפרויקט
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. צור fork למאגר
+2. צור ענף חדש (\`git checkout -b feature/amazing-feature\`)
+3. בצע commit לשינויים (\`git commit -m 'Add amazing feature'\`)
+4. דחוף לענף (\`git push origin feature/amazing-feature\`)
+5. פתח בקשת משיכה

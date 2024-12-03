@@ -1,0 +1,371 @@
+{"level":"error","message":"Database connection error: Index contains column that is missing in the entity (VacationFollow): userId","stack":"TypeORMError: Index contains column that is missing in the entity (VacationFollow): userId\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata\\IndexMetadata.ts:242:27\n    at Array.map (<anonymous>)\n    at IndexMetadata.build (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata\\IndexMetadata.ts:222:18)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata-builder\\EntityMetadataBuilder.ts:364:23\n    at Array.forEach (<anonymous>)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata-builder\\EntityMetadataBuilder.ts:363:36\n    at Array.forEach (<anonymous>)\n    at EntityMetadataBuilder.build (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata-builder\\EntityMetadataBuilder.ts:362:25)\n    at ConnectionMetadataBuilder.buildEntityMetadatas (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\connection\\ConnectionMetadataBuilder.ts:106:11)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)","timestamp":"2024-12-01T18:25:09.632Z"}
+{"level":"error","message":"Database connection error: Index contains column that is missing in the entity (VacationFollow): userId","stack":"TypeORMError: Index contains column that is missing in the entity (VacationFollow): userId\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata\\IndexMetadata.ts:242:27\n    at Array.map (<anonymous>)\n    at IndexMetadata.build (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata\\IndexMetadata.ts:222:18)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata-builder\\EntityMetadataBuilder.ts:364:23\n    at Array.forEach (<anonymous>)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata-builder\\EntityMetadataBuilder.ts:363:36\n    at Array.forEach (<anonymous>)\n    at EntityMetadataBuilder.build (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata-builder\\EntityMetadataBuilder.ts:362:25)\n    at ConnectionMetadataBuilder.buildEntityMetadatas (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\connection\\ConnectionMetadataBuilder.ts:106:11)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)","timestamp":"2024-12-01T18:30:31.654Z"}
+{"level":"error","message":"Database connection error: Index contains column that is missing in the entity (VacationFollow): userId","stack":"TypeORMError: Index contains column that is missing in the entity (VacationFollow): userId\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata\\IndexMetadata.ts:242:27\n    at Array.map (<anonymous>)\n    at IndexMetadata.build (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata\\IndexMetadata.ts:222:18)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata-builder\\EntityMetadataBuilder.ts:364:23\n    at Array.forEach (<anonymous>)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata-builder\\EntityMetadataBuilder.ts:363:36\n    at Array.forEach (<anonymous>)\n    at EntityMetadataBuilder.build (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\metadata-builder\\EntityMetadataBuilder.ts:362:25)\n    at ConnectionMetadataBuilder.buildEntityMetadatas (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\src\\connection\\ConnectionMetadataBuilder.ts:106:11)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)","timestamp":"2024-12-01T18:32:06.044Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T18:32:38.749Z"}
+{"level":"info","message":"New user registered: test@example.com","timestamp":"2024-12-01T18:36:24.070Z"}
+{"level":"info","message":"User registered successfully: test@example.com","timestamp":"2024-12-01T18:36:24.073Z"}
+{"level":"info","message":"User logged in: test@example.com","timestamp":"2024-12-01T18:36:52.885Z"}
+{"level":"info","message":"User logged in successfully: test@example.com","timestamp":"2024-12-01T18:36:52.887Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T18:37:51.897Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T18:38:28.006Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T18:51:17.199Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T19:18:01.539Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T19:23:45.847Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T19:30:45.659Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T19:54:49.713Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T19:56:34.292Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T20:02:27.994Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-01T21:23:02.836Z"}
+{"error":{"isOperational":true,"statusCode":401},"level":"error","message":"Login failed for user: admin@test.com","timestamp":"2024-12-01T21:23:02.946Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:25:42.944Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-01T21:26:15.962Z"}
+{"error":{"isOperational":true,"statusCode":401},"level":"error","message":"Login failed for user: admin@test.com","timestamp":"2024-12-01T21:26:16.041Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:26:25.664Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:27:02.640Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-01T21:27:32.105Z"}
+{"error":{"isOperational":true,"statusCode":401},"level":"error","message":"Login failed for user: admin@test.com","timestamp":"2024-12-01T21:27:32.180Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:29:52.820Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:31:00.724Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:31:23.439Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:33:24.768Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:33:45.072Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:36:56.227Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-01T21:37:25.754Z"}
+{"level":"error","message":"Login failed: Invalid password for user - admin@test.com","timestamp":"2024-12-01T21:37:25.834Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:41:19.348Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-01T21:41:40.055Z"}
+{"level":"error","message":"Login failed: Invalid password for user - admin@test.com","timestamp":"2024-12-01T21:41:40.131Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:42:34.734Z"}
+{"level":"error","message":"Database connection error: Index contains column that is missing in the entity (VacationFollow): userId","stack":"TypeORMError: Index contains column that is missing in the entity (VacationFollow): userId\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\typeorm\\metadata\\IndexMetadata.js:125:23\n    at Array.map (<anonymous>)\n    at IndexMetadata.build (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\typeorm\\metadata\\IndexMetadata.js:111:18)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\typeorm\\metadata-builder\\EntityMetadataBuilder.js:214:61\n    at Array.forEach (<anonymous>)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\typeorm\\metadata-builder\\EntityMetadataBuilder.js:214:36\n    at Array.forEach (<anonymous>)\n    at EntityMetadataBuilder.build (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\typeorm\\metadata-builder\\EntityMetadataBuilder.js:213:25)\n    at ConnectionMetadataBuilder.buildEntityMetadatas (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\typeorm\\connection\\ConnectionMetadataBuilder.js:66:150)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)","timestamp":"2024-12-01T21:44:13.079Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:44:40.011Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:45:16.169Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:45:31.376Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-01T21:46:30.284Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-01T21:46:30.297Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:47:21.280Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-01T21:47:21.305Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-01T21:47:21.317Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:48:34.189Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-01T21:48:49.608Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-01T21:48:49.617Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-01T21:48:49.618Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-01T21:48:49.618Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-01T21:48:49.685Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-01T21:48:49.686Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-01T21:48:49.690Z"}
+{"level":"error","message":"Error: No token provided","method":"GET","path":"/api/v1/vacations","stack":"Error: No token provided\n    at auth (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\src\\middleware\\auth.ts:21:13)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:284:15\n    at Function.process_params (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at Function.handle (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:47:12)","timestamp":"2024-12-01T21:48:49.751Z"}
+{"level":"error","message":"Error: No token provided","method":"GET","path":"/api/v1/vacations","stack":"Error: No token provided\n    at auth (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\src\\middleware\\auth.ts:21:13)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:284:15\n    at Function.process_params (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at Function.handle (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:47:12)","timestamp":"2024-12-01T21:48:49.755Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:50:09.357Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-01T21:50:13.187Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-01T21:50:13.196Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-01T21:50:13.197Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-01T21:50:13.197Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-01T21:50:13.264Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-01T21:50:13.265Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-01T21:50:13.267Z"}
+{"level":"error","message":"Error: No token provided","method":"GET","path":"/api/v1/vacations","stack":"Error: No token provided\n    at auth (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\src\\middleware\\auth.ts:21:13)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:284:15\n    at Function.process_params (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at Function.handle (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:47:12)","timestamp":"2024-12-01T21:50:13.293Z"}
+{"level":"error","message":"Error: No token provided","method":"GET","path":"/api/v1/vacations","stack":"Error: No token provided\n    at auth (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\src\\middleware\\auth.ts:21:13)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:284:15\n    at Function.process_params (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at Function.handle (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:47:12)","timestamp":"2024-12-01T21:50:13.296Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:53:43.143Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-01T21:53:50.275Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-01T21:53:50.287Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-01T21:53:50.287Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-01T21:53:50.287Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-01T21:53:50.356Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-01T21:53:50.357Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-01T21:53:50.359Z"}
+{"level":"error","message":"Error: Unknown column 'vacation.followersCount' in 'field list'","method":"GET","path":"/api/v1/vacations","stack":"QueryFailedError: Unknown column 'vacation.followersCount' in 'field list'\n    at Query.onResult (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\typeorm\\src\\driver\\mysql\\MysqlQueryRunner.ts:246:33)\n    at Query.execute (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\commands\\command.js:36:14)\n    at PoolConnection.handlePacket (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\base\\connection.js:475:34)\n    at PacketParser.onPacket (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\base\\connection.js:93:12)\n    at PacketParser.executeStart (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\packet_parser.js:75:16)\n    at Socket.<anonymous> (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\base\\connection.js:100:25)\n    at Socket.emit (node:events:519:28)\n    at Socket.emit (node:domain:488:12)\n    at addChunk (node:internal/streams/readable:559:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)","timestamp":"2024-12-01T21:53:50.455Z"}
+{"level":"error","message":"Error: Unknown column 'vacation.followersCount' in 'field list'","method":"GET","path":"/api/v1/vacations","stack":"QueryFailedError: Unknown column 'vacation.followersCount' in 'field list'\n    at Query.onResult (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\typeorm\\src\\driver\\mysql\\MysqlQueryRunner.ts:246:33)\n    at Query.execute (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\commands\\command.js:36:14)\n    at PoolConnection.handlePacket (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\base\\connection.js:475:34)\n    at PacketParser.onPacket (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\base\\connection.js:93:12)\n    at PacketParser.executeStart (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\packet_parser.js:75:16)\n    at Socket.<anonymous> (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\base\\connection.js:100:25)\n    at Socket.emit (node:events:519:28)\n    at Socket.emit (node:domain:488:12)\n    at addChunk (node:internal/streams/readable:559:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)","timestamp":"2024-12-01T21:53:50.468Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T21:55:22.634Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-01T21:55:29.191Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-01T21:55:29.200Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-01T21:55:29.201Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-01T21:55:29.201Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-01T21:55:29.267Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-01T21:55:29.268Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-01T21:55:29.270Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T21:55:29.368Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T21:55:29.385Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T21:55:29.411Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T21:57:46.340Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T21:57:46.355Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T22:03:01.042Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T22:03:51.831Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-01T22:06:47.707Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-01T22:47:38.299Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-01T22:47:38.352Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-01T22:47:38.353Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-01T22:47:38.353Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-01T22:47:38.423Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-01T22:47:38.424Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-01T22:47:38.432Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:47:38.506Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:47:38.524Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:49:34.251Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:49:34.268Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:50:57.106Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:50:57.123Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-01T22:53:02.703Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-01T22:53:02.711Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-01T22:53:02.713Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-01T22:53:02.713Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-01T22:53:02.777Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-01T22:53:02.778Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-01T22:53:02.779Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:53:02.827Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:53:02.840Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:53:05.317Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:53:05.333Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:53:39.458Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:53:39.480Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:54:17.322Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:54:17.335Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-01T22:59:20.739Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-01T22:59:20.741Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-01T22:59:20.742Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-01T22:59:20.742Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-01T22:59:20.804Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-01T22:59:20.805Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-01T22:59:20.806Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:59:20.843Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:59:20.855Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:59:28.915Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:59:28.925Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:59:40.238Z"}
+{"level":"info","message":"Retrieved vacations list for user: 6","timestamp":"2024-12-01T22:59:40.254Z"}
+{"level":"error","message":"Error: No token provided","method":"POST","path":"/api/v1/vacations","stack":"Error: No token provided\n    at auth (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\src\\middleware\\auth.ts:21:13)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:284:15\n    at Function.process_params (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at Function.handle (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:47:12)","timestamp":"2024-12-01T23:01:47.920Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-02T08:40:00.670Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-02T08:40:00.712Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-02T08:40:00.712Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-02T08:40:00.712Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-02T08:40:00.775Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-02T08:40:00.775Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-02T08:40:00.778Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:40:00.833Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:40:00.847Z"}
+{"level":"error","message":"Error: No token provided","method":"POST","path":"/api/v1/vacations","stack":"Error: No token provided\n    at auth (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\src\\middleware\\auth.ts:21:13)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:284:15\n    at Function.process_params (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at Function.handle (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:47:12)","timestamp":"2024-12-02T08:40:59.859Z"}
+{"level":"error","message":"Error: No token provided","method":"POST","path":"/api/v1/vacations","stack":"Error: No token provided\n    at auth (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\src\\middleware\\auth.ts:21:13)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:284:15\n    at Function.process_params (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at Function.handle (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\index.js:47:12)","timestamp":"2024-12-02T08:44:01.410Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-02T08:44:05.232Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-02T08:44:05.235Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-02T08:44:05.235Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-02T08:44:05.236Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-02T08:44:05.296Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-02T08:44:05.297Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-02T08:44:05.298Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:44:05.349Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:44:05.362Z"}
+{"level":"error","message":"Error: Description must be between 10 and 1000 characters","method":"POST","path":"/api/v1/vacations","stack":"Error: Description must be between 10 and 1000 characters\n    at validate (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\src\\middleware\\validate.ts:9:11)\n    at Layer.handle [as handle_request] (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at middleware (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\express-validator\\lib\\middlewares\\check.js:16:13)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)","timestamp":"2024-12-02T08:44:37.000Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-02T08:46:39.725Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-02T08:46:39.729Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-02T08:46:39.729Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-02T08:46:39.729Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-02T08:46:39.790Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-02T08:46:39.790Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-02T08:46:39.791Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:46:39.841Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:46:39.853Z"}
+{"level":"info","message":"New vacation created: Shnghai, China","timestamp":"2024-12-02T08:47:30.247Z"}
+{"level":"info","message":"Created new vacation: 21","timestamp":"2024-12-02T08:47:30.247Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:47:30.278Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:47:30.338Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:47:30.350Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-02T08:47:46.323Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-02T08:47:46.326Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-02T08:47:46.327Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-02T08:47:46.327Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-02T08:47:46.391Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-02T08:47:46.391Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-02T08:47:46.393Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:47:46.438Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:47:46.450Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:48:09.215Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:48:09.226Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:48:14.285Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T08:48:14.296Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-02T08:51:41.776Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T09:00:50.321Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T09:00:50.355Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T09:00:55.952Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T09:00:55.972Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T09:00:58.125Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T09:00:58.140Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T09:01:09.775Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T09:01:09.792Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-02T09:01:11.081Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-02T09:01:11.087Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-02T09:01:11.087Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-02T09:01:11.087Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-02T09:01:11.161Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-02T09:01:11.161Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-02T09:01:11.164Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T09:01:11.251Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T09:01:11.264Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-02T09:05:30.333Z"}
+{"level":"info","message":"Static files are served from: C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\uploads","timestamp":"2024-12-02T09:05:30.336Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T09:05:33.296Z"}
+{"level":"info","message":"Retrieved vacations list for user: 10","timestamp":"2024-12-02T09:05:33.320Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-02T09:25:09.334Z"}
+{"level":"error","message":"Error: User not found","method":"GET","path":"/api/v1/vacations","stack":"Error: User not found\n    at UserService.findById (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\dist\\services\\user.service.js:19:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async auth (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\dist\\middleware\\auth.js:19:22)","timestamp":"2024-12-02T09:25:26.879Z"}
+{"level":"error","message":"Error: User not found","method":"GET","path":"/api/v1/vacations","stack":"Error: User not found\n    at UserService.findById (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\dist\\services\\user.service.js:19:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async auth (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\dist\\middleware\\auth.js:19:22)","timestamp":"2024-12-02T09:25:26.887Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-02T09:31:25.880Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-02T14:59:06.803Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-02T14:59:06.872Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-02T14:59:06.872Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-02T14:59:06.873Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-02T14:59:06.940Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-02T14:59:06.942Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-02T14:59:06.947Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T14:59:07.222Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T14:59:07.241Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T15:01:19.181Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T15:01:19.194Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T15:01:52.390Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T15:01:52.407Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-02T16:45:26.426Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-02T16:45:26.473Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-02T16:45:26.474Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-02T16:45:26.474Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-02T16:45:26.535Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-02T16:45:26.536Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-02T16:45:26.538Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T16:45:26.825Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T16:45:26.842Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-02T17:11:01.668Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-02T17:11:01.682Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-02T17:11:01.683Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-02T17:11:01.683Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-02T17:11:01.743Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-02T17:11:01.743Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-02T17:11:01.745Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:13:38.691Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:13:38.709Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-02T17:33:20.013Z"}
+{"level":"info","message":"Static files are served from: C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\uploads","timestamp":"2024-12-02T17:33:20.015Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-02T17:35:28.823Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-02T17:35:28.837Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-02T17:35:28.838Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-02T17:35:28.838Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-02T17:35:28.906Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-02T17:35:28.914Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-02T17:35:28.950Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:35:29.087Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:35:29.106Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:18.225Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:18.242Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:19.328Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:19.342Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:20.144Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:20.187Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:20.481Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:20.627Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:21.296Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:21.352Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-02T17:39:22.946Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-02T17:39:22.954Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-02T17:39:22.955Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-02T17:39:22.955Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-02T17:39:23.017Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-02T17:39:23.017Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-02T17:39:23.019Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:23.054Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:23.064Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:26.665Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:26.674Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:28.012Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:39:28.023Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-02T17:42:43.643Z"}
+{"level":"info","message":"Static files are served from: C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\uploads","timestamp":"2024-12-02T17:42:43.646Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:42:48.528Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:42:48.547Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-02T17:43:55.116Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-02T17:43:55.121Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-02T17:43:55.121Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-02T17:43:55.121Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-02T17:43:55.190Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-02T17:43:55.192Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-02T17:43:55.194Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:43:55.243Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:43:55.254Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:44:00.328Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:44:00.341Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:44:01.485Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:44:01.496Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:49:00.660Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:49:00.674Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:50:59.287Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:50:59.299Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:51:19.820Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:51:19.832Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:51:56.424Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:51:56.438Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:00.136Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:00.157Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:03.678Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:03.694Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:07.210Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:07.226Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:07.593Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:07.606Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:08.040Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:08.052Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:08.371Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:08.382Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:08.799Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:08.809Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:09.327Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:09.339Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:12.233Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:12.243Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:14.432Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:52:14.441Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:54:42.363Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:54:42.375Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:55:10.410Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-02T17:55:10.426Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-02T17:57:38.997Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-03T05:37:37.683Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-03T05:37:37.710Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-03T05:38:13.207Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-03T05:38:13.213Z"}
+{"level":"info","message":"Input password length: 8","timestamp":"2024-12-03T05:38:13.213Z"}
+{"level":"info","message":"Stored hash: $2a$10$fdnWXHcv8uVV9.hkVc4rKexUgMCt5omqPJUKQC1yLAXdv193WAT.S","timestamp":"2024-12-03T05:38:13.214Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-03T05:38:13.282Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-03T05:38:13.283Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-03T05:38:13.286Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-03T05:42:23.608Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-03T05:42:23.625Z"}
+{"level":"info","message":"Retrieved vacation followers statistics","timestamp":"2024-12-03T05:55:09.377Z"}
+{"level":"info","message":"Retrieved vacation followers statistics","timestamp":"2024-12-03T05:55:09.393Z"}
+{"level":"info","message":"Retrieved vacation followers statistics","timestamp":"2024-12-03T08:25:11.771Z"}
+{"level":"info","message":"Retrieved vacation followers statistics","timestamp":"2024-12-03T08:25:11.788Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-03T08:25:32.690Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-03T08:25:32.704Z"}
+{"level":"info","message":"Retrieved vacation followers statistics","timestamp":"2024-12-03T08:27:06.745Z"}
+{"level":"info","message":"Retrieved vacation followers statistics","timestamp":"2024-12-03T08:27:06.759Z"}
+{"level":"info","message":"Retrieved vacation followers statistics","timestamp":"2024-12-03T08:40:01.372Z"}
+{"level":"info","message":"Retrieved vacation followers statistics","timestamp":"2024-12-03T08:40:01.386Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-03T08:47:12.046Z"}
+{"level":"info","message":"Static files are served from: C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\uploads","timestamp":"2024-12-03T08:47:12.049Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-03T08:47:17.211Z"}
+{"level":"info","message":"Retrieved vacations list for user: 1","timestamp":"2024-12-03T08:47:17.235Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-03T09:27:26.227Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-03T09:27:26.300Z"}
+{"level":"info","message":"Database connection initialized","timestamp":"2024-12-03T09:49:47.379Z"}
+{"code":"ER_TRUNCATE_ILLEGAL_FK","driverError":{"code":"ER_TRUNCATE_ILLEGAL_FK","errno":1701,"sql":"TRUNCATE TABLE `vacations`","sqlMessage":"Cannot truncate a table referenced in a foreign key constraint (`vacation_db`.`vacation_follows`, CONSTRAINT `vacation_follows_ibfk_2` FOREIGN KEY (`vacationId`) REFERENCES `vacation_db`.`vacations` (`id`))","sqlState":"42000"},"errno":1701,"level":"error","message":"Seed failed: Cannot truncate a table referenced in a foreign key constraint (`vacation_db`.`vacation_follows`, CONSTRAINT `vacation_follows_ibfk_2` FOREIGN KEY (`vacationId`) REFERENCES `vacation_db`.`vacations` (`id`))","query":"TRUNCATE TABLE `vacations`","sql":"TRUNCATE TABLE `vacations`","sqlMessage":"Cannot truncate a table referenced in a foreign key constraint (`vacation_db`.`vacation_follows`, CONSTRAINT `vacation_follows_ibfk_2` FOREIGN KEY (`vacationId`) REFERENCES `vacation_db`.`vacations` (`id`))","sqlState":"42000","stack":"QueryFailedError: Cannot truncate a table referenced in a foreign key constraint (`vacation_db`.`vacation_follows`, CONSTRAINT `vacation_follows_ibfk_2` FOREIGN KEY (`vacationId`) REFERENCES `vacation_db`.`vacations` (`id`))\n    at Query.onResult (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\typeorm\\src\\driver\\mysql\\MysqlQueryRunner.ts:246:33)\n    at Query.execute (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\commands\\command.js:36:14)\n    at PoolConnection.handlePacket (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\base\\connection.js:475:34)\n    at PacketParser.onPacket (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\base\\connection.js:93:12)\n    at PacketParser.executeStart (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\packet_parser.js:75:16)\n    at Socket.<anonymous> (C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\node_modules\\mysql2\\lib\\base\\connection.js:100:25)\n    at Socket.emit (node:events:519:28)\n    at Socket.emit (node:domain:488:12)\n    at addChunk (node:internal/streams/readable:559:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)","timestamp":"2024-12-03T09:49:47.444Z"}
+{"level":"info","message":"Database connection initialized","timestamp":"2024-12-03T09:54:23.250Z"}
+{"level":"info","message":"Setting up database...","timestamp":"2024-12-03T09:54:23.252Z"}
+{"level":"info","message":"Database setup completed","timestamp":"2024-12-03T09:54:23.354Z"}
+{"level":"info","message":"Clearing existing data...","timestamp":"2024-12-03T09:54:23.354Z"}
+{"level":"info","message":"Existing data cleared","timestamp":"2024-12-03T09:54:23.407Z"}
+{"level":"info","message":"Admin user created","timestamp":"2024-12-03T09:54:23.491Z"}
+{"level":"info","message":"Regular user created","timestamp":"2024-12-03T09:54:23.498Z"}
+{"level":"info","message":"Sample vacations created","timestamp":"2024-12-03T09:54:23.519Z"}
+{"level":"info","message":"Vacation follows created","timestamp":"2024-12-03T09:54:23.551Z"}
+{"level":"info","message":"Server is running on port 3001","timestamp":"2024-12-03T10:02:19.121Z"}
+{"level":"info","message":"Static files are served from: C:\\Users\\eladj\\Documents\\vacation-student-id-final\\server\\uploads","timestamp":"2024-12-03T10:02:19.124Z"}
+{"level":"info","message":"Login attempt for email: admin@test.com","timestamp":"2024-12-03T10:19:08.096Z"}
+{"level":"info","message":"Attempting password comparison for user admin@test.com","timestamp":"2024-12-03T10:19:08.133Z"}
+{"level":"info","message":"Input password length: 6","timestamp":"2024-12-03T10:19:08.133Z"}
+{"level":"info","message":"Stored hash: $2a$10$w0sFl/1tS7cLiOVN/TBXZO0T0ex5hHEMwHeEb8dO2HG.rKJ3M8WeC","timestamp":"2024-12-03T10:19:08.134Z"}
+{"level":"info","message":"Password comparison result: true","timestamp":"2024-12-03T10:19:08.202Z"}
+{"level":"info","message":"User logged in successfully: admin@test.com","timestamp":"2024-12-03T10:19:08.203Z"}
+{"level":"info","message":"Login successful for user: admin@test.com","timestamp":"2024-12-03T10:19:08.210Z"}
