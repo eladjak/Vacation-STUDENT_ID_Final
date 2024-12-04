@@ -29,10 +29,19 @@
       "@hooks/*": ["hooks/*"],
       "@styles/*": ["styles/*"],
       "@assets/*": ["assets/*"]
-    }
+    },
+    "types": [
+      "node",
+      "jest",
+      "@types/react",
+      "@types/react-dom",
+      "@types/react-router-dom"
+    ]
   },
   "include": [
-    "src"
+    "src",
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "exclude": [
     "node_modules"

@@ -1,12 +1,11 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3001',
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3001/api/v1',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
-  },
-  withCredentials: true
+  }
 });
 
 // Add a request interceptor
@@ -16,10 +15,15 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Don't add Content-Type for FormData
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
+    }
+    
     console.log('Request:', { 
       url: config.url, 
-      method: config.method, 
-      data: config.data,
+      method: config.method,
       headers: config.headers
     });
     return config;
@@ -35,8 +39,7 @@ axiosInstance.interceptors.response.use(
   (response) => {
     console.log('Response:', { 
       url: response.config.url, 
-      status: response.status, 
-      data: response.data,
+      status: response.status,
       headers: response.headers
     });
     return response;
@@ -52,12 +55,13 @@ axiosInstance.interceptors.response.use(
 
     // Handle 401 Unauthorized
     if (error.response.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      // Only clear token and redirect if we're not already on the login page
       if (window.location.pathname !== '/login') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         window.location.href = '/login';
       }
-      return Promise.reject(new Error('שם משתמש או סיסמה שגויים'));
+      return Promise.reject(new Error(error.response.data?.message || 'נדרשת התחברות מחדש'));
     }
 
     // Handle 403 Forbidden

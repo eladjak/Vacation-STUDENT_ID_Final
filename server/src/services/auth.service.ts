@@ -32,7 +32,8 @@ export class AuthService {
     logger.info(`New user registered: ${user.email}`);
 
     const token = this.generateToken(user);
-    return { user, token };
+    const userResponse = this.sanitizeUser(user);
+    return { user: userResponse, token };
   }
 
   async login(email: string, password: string): Promise<{ user: User; token: string }> {
@@ -47,9 +48,6 @@ export class AuthService {
 
     try {
       logger.info(`Attempting password comparison for user ${email}`);
-      logger.info(`Input password length: ${password.length}`);
-      logger.info(`Stored hash: ${user.password}`);
-      
       const isPasswordValid = await compare(password, user.password);
       logger.info(`Password comparison result: ${isPasswordValid}`);
       
@@ -60,7 +58,8 @@ export class AuthService {
 
       logger.info(`User logged in successfully: ${email}`);
       const token = this.generateToken(user);
-      return { user, token };
+      const userResponse = this.sanitizeUser(user);
+      return { user: userResponse, token };
     } catch (error) {
       logger.error(`Login error for user ${email}:`, error);
       throw new AppError(401, 'Invalid credentials');
@@ -68,11 +67,22 @@ export class AuthService {
   }
 
   private generateToken(user: User): string {
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      logger.error('JWT_SECRET is not defined');
+      throw new AppError(500, 'Server configuration error');
+    }
+
     return sign(
-      { id: user.id, role: user.role },
-      process.env.JWT_SECRET || 'your-secret-key',
+      { userId: user.id, role: user.role },
+      jwtSecret,
       { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
     );
+  }
+
+  private sanitizeUser(user: User): User {
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword as User;
   }
 
   async refreshToken(userId: number): Promise<string> {

@@ -1,155 +1,99 @@
 import { AppDataSource } from './data-source';
-import { User, UserRole } from '../entities/User';
-import { Vacation } from '../entities/Vacation';
-import { VacationFollow } from '../entities/VacationFollow';
-import { hash } from 'bcryptjs';
-import { logger } from '../utils/logger';
-import * as fs from 'fs';
-import * as path from 'path';
+import { User } from '../entities/user.entity';
+import { Vacation } from '../entities/vacation.entity';
+import { VacationFollow } from '../entities/vacation-follow.entity';
+import bcrypt from 'bcryptjs';
+import { Logger } from 'winston';
+import { createLogger, format, transports } from 'winston';
+
+const logger = createLogger({
+  format: format.combine(
+    format.timestamp(),
+    format.json()
+  ),
+  transports: [new transports.Console()]
+});
 
 async function seed() {
   try {
     // Initialize database connection
-    await AppDataSource.initialize();
+    if (!AppDataSource.isInitialized) {
+      await AppDataSource.initialize();
+    }
     logger.info('Database connection initialized');
 
-    // Get repositories
-    const userRepository = AppDataSource.getRepository(User);
-    const vacationRepository = AppDataSource.getRepository(Vacation);
-    const followRepository = AppDataSource.getRepository(VacationFollow);
-
-    // Read and execute setup.sql
-    logger.info('Setting up database...');
-    const setupSql = fs.readFileSync(path.join(__dirname, 'setup.sql'), 'utf8');
-    const setupCommands = setupSql.split(';').filter(cmd => cmd.trim());
-    
-    for (const command of setupCommands) {
-      if (command.trim()) {
-        try {
-          await AppDataSource.query(command);
-        } catch (err: any) {
-          // Ignore errors about database already existing
-          if (err?.message && !err.message.includes('database exists')) {
-            throw err;
-          }
-        }
-      }
-    }
-    logger.info('Database setup completed');
-
-    // Clear existing data - order matters due to foreign key constraints
-    logger.info('Clearing existing data...');
-    
-    // Disable foreign key checks
-    await AppDataSource.query('SET FOREIGN_KEY_CHECKS = 0');
-    
-    // Clear all tables
-    await followRepository.clear();
-    await vacationRepository.clear();
-    await userRepository.clear();
-    
-    // Re-enable foreign key checks
-    await AppDataSource.query('SET FOREIGN_KEY_CHECKS = 1');
-    
-    logger.info('Existing data cleared');
+    // Drop all tables and recreate them
+    logger.info('Recreating database schema...');
+    await AppDataSource.synchronize(true);
+    logger.info('Database schema recreated');
 
     // Create admin user
-    const adminPassword = '123456';
-    const hashedPassword = await hash(adminPassword, 10);
-    
-    const admin = userRepository.create({
+    const hashedPassword = await bcrypt.hash('123456', 10);
+    const admin = AppDataSource.getRepository(User).create({
       firstName: 'Admin',
       lastName: 'User',
       email: 'admin@test.com',
       password: hashedPassword,
-      role: UserRole.ADMIN
+      role: 'admin'
     });
-    await userRepository.save(admin);
+    await AppDataSource.getRepository(User).save(admin);
     logger.info('Admin user created');
 
     // Create regular user
-    const user = userRepository.create({
+    const user = AppDataSource.getRepository(User).create({
       firstName: 'Regular',
       lastName: 'User',
       email: 'user@test.com',
       password: hashedPassword,
-      role: UserRole.USER
+      role: 'user'
     });
-    await userRepository.save(user);
+    await AppDataSource.getRepository(User).save(user);
     logger.info('Regular user created');
 
     // Create sample vacations
     const vacations = [
       {
         destination: 'פריז, צרפת',
-        description: 'חוויה קסומה בעיר האורות עם אתרים איקוניים ואווירה רומנטית',
-        startDate: '2024-06-15',
-        endDate: '2024-06-22',
-        price: 1200.00,
-        imageUrl: '/uploads/vacations/paris.jpg',
-        followersCount: 0
+        description: 'עיר האורות המרהיבה מציעה אמנות, תרבות, אוכל משובח ואווירה רומנטית',
+        startDate: '2024-01-15',
+        endDate: '2024-01-22',
+        price: 3500,
+        imageUrl: '/uploads/vacations/paris.jpg'
       },
       {
         destination: 'טוקיו, יפן',
-        description: 'טיול מרתק בתרבות היפנית, טכנולוגיה ואוכל מדהים',
-        startDate: '2024-07-01',
-        endDate: '2024-07-10',
-        price: 2500.00,
-        imageUrl: '/uploads/vacations/tokyo.jpg',
-        followersCount: 0
+        description: 'עיר מרתקת המשלבת מסורת עתיקה עם טכנולוגיה מתקדמת',
+        startDate: '2024-02-01',
+        endDate: '2024-02-10',
+        price: 5000,
+        imageUrl: '/uploads/vacations/tokyo.jpg'
       },
       {
-        destination: 'סנטוריני, יוון',
-        description: 'חופשה מושלמת עם שקיעות מרהיבות וארכיטקטורה לבנה מדהימה',
-        startDate: '2024-08-05',
-        endDate: '2024-08-12',
-        price: 1800.00,
-        imageUrl: '/uploads/vacations/santorini.jpg',
-        followersCount: 0
-      },
-      {
-        destination: 'ניו יורק, ארה"ב',
-        description: 'חוויה אורבנית בעיר שלא נרדמת לעולם',
-        startDate: '2024-09-10',
-        endDate: '2024-09-17',
-        price: 2200.00,
-        imageUrl: '/uploads/vacations/nyc.jpg',
-        followersCount: 0
-      },
-      {
-        destination: 'האיים המלדיביים',
-        description: 'גן עדן טרופי עם מים צלולים ומלונות יוקרה',
-        startDate: '2024-10-01',
-        endDate: '2024-10-08',
-        price: 3000.00,
-        imageUrl: '/uploads/vacations/maldives.jpg',
-        followersCount: 0
+        destination: 'ברצלונה, ספרד',
+        description: 'עיר תוססת עם אדריכלות ייחודית, תופים מדהימים ותרבות עשירה',
+        startDate: '2024-03-05',
+        endDate: '2024-03-12',
+        price: 2800,
+        imageUrl: '/uploads/vacations/barcelona.jpg'
       }
     ];
 
     const savedVacations = [];
     for (const vacationData of vacations) {
-      const vacation = vacationRepository.create(vacationData);
-      const savedVacation = await vacationRepository.save(vacation);
+      const vacation = AppDataSource.getRepository(Vacation).create(vacationData);
+      const savedVacation = await AppDataSource.getRepository(Vacation).save(vacation);
       savedVacations.push(savedVacation);
     }
     logger.info('Sample vacations created');
 
-    // Add some vacation follows for the regular user
-    const vacationsToFollow = savedVacations.slice(0, 3); // Follow first 3 vacations
-
-    for (const vacation of vacationsToFollow) {
-      const follow = followRepository.create({
-        user,
-        vacation
-      });
-      await followRepository.save(follow);
-      
-      // Update followers count
-      vacation.followersCount += 1;
-      await vacationRepository.save(vacation);
-    }
-    logger.info('Vacation follows created');
+    // Add some follows
+    const firstVacation = savedVacations[0];
+    const follow = AppDataSource.getRepository(VacationFollow).create({
+      user,
+      vacation: firstVacation
+    });
+    await AppDataSource.getRepository(VacationFollow).save(follow);
+    logger.info('Sample follow created');
 
     logger.info('Seed completed successfully');
     process.exit(0);

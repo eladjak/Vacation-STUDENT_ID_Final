@@ -1,97 +1,76 @@
 import { body, ValidationChain } from 'express-validator';
 
-export const validateRegister: ValidationChain[] = [
-  body('firstName')
+export const validateVacation: ValidationChain[] = [
+  body('destination')
     .trim()
     .notEmpty()
-    .withMessage('First name is required')
-    .isLength({ min: 2, max: 50 })
-    .withMessage('First name must be between 2 and 50 characters'),
-  
-  body('lastName')
+    .withMessage('יעד החופשה הוא שדה חובה')
+    .isLength({ min: 2, max: 100 })
+    .withMessage('יעד החופשה חייב להיות בין 2 ל-100 תווים'),
+
+  body('description')
     .trim()
     .notEmpty()
-    .withMessage('Last name is required')
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Last name must be between 2 and 50 characters'),
-  
-  body('email')
-    .trim()
+    .withMessage('תיאור החופשה הוא שדה חובה')
+    .isLength({ min: 10, max: 1000 })
+    .withMessage('תיאור החופשה חייב להיות בין 10 ל-1000 תווים'),
+
+  body('startDate')
     .notEmpty()
-    .withMessage('Email is required')
-    .isEmail()
-    .withMessage('Invalid email format')
-    .normalizeEmail(),
-  
-  body('password')
-    .trim()
+    .withMessage('תאריך התחלה הוא שדה חובה')
+    .isISO8601()
+    .withMessage('תאריך התחלה לא תקין'),
+
+  body('endDate')
     .notEmpty()
-    .withMessage('Password is required')
-    .isLength({ min: 6 })
-    .withMessage('Password must be at least 6 characters long')
-    .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/)
-    .withMessage('Password must contain at least one letter and one number')
+    .withMessage('תאריך סיום הוא שדה חובה')
+    .isISO8601()
+    .withMessage('תאריך סיום לא תקין')
+    .custom((value, { req }) => {
+      if (new Date(value) <= new Date(req.body.startDate)) {
+        throw new Error('תאריך הסיום חייב להיות אחרי תאריך ההתחלה');
+      }
+      return true;
+    }),
+
+  body('price')
+    .notEmpty()
+    .withMessage('מחיר החופשה הוא שדה חובה')
+    .isFloat({ min: 0 })
+    .withMessage('מחיר החופשה חייב להיות מספר חיובי')
 ];
 
 export const validateLogin: ValidationChain[] = [
   body('email')
     .trim()
     .notEmpty()
-    .withMessage('Email is required')
+    .withMessage('כתובת אימייל היא שדה חובה')
     .isEmail()
-    .withMessage('Invalid email format')
-    .normalizeEmail(),
-  
+    .withMessage('כתובת אימייל לא תקינה'),
+
   body('password')
     .trim()
     .notEmpty()
-    .withMessage('Password is required')
+    .withMessage('סיסמה היא שדה חובה')
+    .isLength({ min: 6 })
+    .withMessage('הסיסמה חייבת להכיל לפחות 6 תווים')
 ];
 
-export const validateVacation: ValidationChain[] = [
-  body('destination')
+export const validateRegister: ValidationChain[] = [
+  ...validateLogin,
+  body('firstName')
     .trim()
     .notEmpty()
-    .withMessage('Destination is required')
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Destination must be between 2 and 100 characters'),
-  
-  body('description')
+    .withMessage('שם פרטי הוא שדה חובה')
+    .isLength({ min: 2, max: 50 })
+    .withMessage('שם פרטי חייב להיות בין 2 ל-50 תווים'),
+
+  body('lastName')
     .trim()
     .notEmpty()
-    .withMessage('Description is required')
-    .isLength({ min: 10, max: 1000 })
-    .withMessage('Description must be between 10 and 1000 characters'),
-  
-  body('startDate')
-    .notEmpty()
-    .withMessage('Start date is required')
-    .isISO8601()
-    .withMessage('Invalid date format')
-    .custom((value, { req }) => {
-      if (new Date(value) < new Date()) {
-        throw new Error('Start date cannot be in the past');
-      }
-      return true;
-    }),
-  
-  body('endDate')
-    .notEmpty()
-    .withMessage('End date is required')
-    .isISO8601()
-    .withMessage('Invalid date format')
-    .custom((value, { req }) => {
-      if (new Date(value) <= new Date(req.body.startDate)) {
-        throw new Error('End date must be after start date');
-      }
-      return true;
-    }),
-  
-  body('price')
-    .notEmpty()
-    .withMessage('Price is required')
-    .isFloat({ min: 0 })
-    .withMessage('Price must be a positive number')
+    .withMessage('שם משפחה הוא שדה חובה')
+    .isLength({ min: 2, max: 50 })
+    .withMessage('שם משפחה חייב להיות בין 2 ל-50 תווים')
 ];
 
 export const validateUpdateProfile: ValidationChain[] = [

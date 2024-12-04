@@ -1,45 +1,157 @@
 import { Request, Response } from 'express';
-import { AuthService } from '../services/auth.service';
-import { logger } from '../utils/logger';
+import { AppDataSource } from '../config/data-source';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { User } from '../entities/user.entity';
+import { Repository } from 'typeorm';
 
 export class AuthController {
-  private authService: AuthService;
+  private userRepository: Repository<User>;
 
   constructor() {
-    this.authService = new AuthService();
+    this.userRepository = AppDataSource.getRepository(User);
   }
-
-  register = async (req: Request, res: Response) => {
-    const result = await this.authService.register(req.body);
-    res.status(201).json(result);
-  };
 
   login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
-    logger.info(`Login attempt for email: ${email}`);
-    
+
     try {
-      const result = await this.authService.login(email, password);
-      logger.info(`Login successful for user: ${email}`);
-      res.json(result);
+      // Find user
+      const user = await this.userRepository.findOne({ where: { email } });
+      if (!user) {
+        return res.status(401).json({
+          status: 'error',
+          message: 'משתמש לא נמצא'
+        });
+      }
+
+      // Check password
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(401).json({
+          status: 'error',
+          message: 'סיסמה שגויה'
+        });
+      }
+
+      // Generate token
+      const jwtSecret = process.env.JWT_SECRET;
+      if (!jwtSecret) {
+        console.error('JWT_SECRET is not defined');
+        return res.status(500).json({
+          status: 'error',
+          message: 'שגיאת הגדרות שרת'
+        });
+      }
+
+      const token = jwt.sign(
+        { userId: user.id },
+        jwtSecret,
+        { expiresIn: '24h' }
+      );
+
+      // Remove password from response
+      const { password: _, ...userWithoutPassword } = user;
+
+      // Send response in the format the client expects
+      res.json({
+        user: userWithoutPassword,
+        token
+      });
     } catch (error) {
-      logger.error(`Login failed for user: ${email}`, { error });
-      throw error;
+      console.error('Login error:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'שגיאה בהתחברות'
+      });
     }
   };
 
-  refreshToken = async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-    if (!userId) {
-      throw new Error('User ID not found in request');
+  register = async (req: Request, res: Response) => {
+    const { firstName, lastName, email, password } = req.body;
+
+    try {
+      // Check if user exists
+      const existingUser = await this.userRepository.findOne({ where: { email } });
+      if (existingUser) {
+        return res.status(400).json({
+          status: 'error',
+          message: 'משתמש כבר קיים'
+        });
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Create user
+      const user = this.userRepository.create({
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+        role: 'user'
+      });
+
+      await this.userRepository.save(user);
+
+      // Generate token
+      const jwtSecret = process.env.JWT_SECRET;
+      if (!jwtSecret) {
+        console.error('JWT_SECRET is not defined');
+        return res.status(500).json({
+          status: 'error',
+          message: 'שגיאת הגדרות שרת'
+        });
+      }
+
+      const token = jwt.sign(
+        { userId: user.id },
+        jwtSecret,
+        { expiresIn: '24h' }
+      );
+
+      // Remove password from response
+      const { password: _, ...userWithoutPassword } = user;
+
+      // Send response in the format the client expects
+      res.status(201).json({
+        user: userWithoutPassword,
+        token
+      });
+    } catch (error) {
+      console.error('Registration error:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'שגיאה בהרשמה'
+      });
     }
-    const token = await this.authService.refreshToken(userId);
-    res.json({ token });
   };
 
-  logout = async (req: Request, res: Response) => {
-    // In a real application, you might want to invalidate the token here
-    logger.info(`User logged out: ${req.user!.id}`);
-    res.json({ message: 'Logged out successfully' });
+  getCurrentUser = async (req: Request, res: Response) => {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { id: req.user?.id }
+      });
+
+      if (!user) {
+        return res.status(404).json({
+          status: 'error',
+          message: 'משתמש לא נמצא'
+        });
+      }
+
+      // Remove password from response
+      const { password: _, ...userWithoutPassword } = user;
+
+      res.json({
+        user: userWithoutPassword
+      });
+    } catch (error) {
+      console.error('Get current user error:', error);
+      res.status(500).json({
+        status: 'error',
+        message: 'שגיאה בקבלת פרטי משתמש'
+      });
+    }
   };
 } 

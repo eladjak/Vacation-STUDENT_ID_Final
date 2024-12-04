@@ -1,21 +1,18 @@
-# תיעוד ה-API
+# 🔌 VacationVibe API Documentation
 
-## כללי
-- כל הבקשות צריכות לכלול את ה-header הבא:
-  ```
-  Authorization: Bearer <token>
-  ```
-- כל התשובות הן בפורמט JSON
-- בכל שגיאה יוחזר status code מתאים עם הודעת שגיאה
-
-## אימות
-
-### הרשמה
+## 🌐 Base URL
 ```
-POST /api/v1/auth/register
+http://localhost:3001/api/v1
 ```
 
-**גוף הבקשה:**
+## 🔑 Authentication
+
+### Register
+```http
+POST /auth/register
+```
+
+**Request Body:**
 ```json
 {
   "firstName": "string",
@@ -25,34 +22,7 @@ POST /api/v1/auth/register
 }
 ```
 
-**תשובה מוצלחת:**
-```json
-{
-  "user": {
-    "id": "number",
-    "firstName": "string",
-    "lastName": "string",
-    "email": "string",
-    "role": "user"
-  },
-  "token": "string"
-}
-```
-
-### התחברות
-```
-POST /api/v1/auth/login
-```
-
-**גוף הבקשה:**
-```json
-{
-  "email": "string",
-  "password": "string"
-}
-```
-
-**תשובה מוצלחת:**
+**Response:**
 ```json
 {
   "user": {
@@ -66,176 +36,341 @@ POST /api/v1/auth/login
 }
 ```
 
-### רענון טוקן
-```
-POST /api/v1/auth/refresh-token
+### Login
+```http
+POST /auth/login
 ```
 
-**תשובה מוצלחת:**
+**Request Body:**
 ```json
 {
+  "email": "string",
+  "password": "string"
+}
+```
+
+**Response:**
+```json
+{
+  "user": {
+    "id": "number",
+    "firstName": "string",
+    "lastName": "string",
+    "email": "string",
+    "role": "string"
+  },
   "token": "string"
 }
 ```
 
-## חופשות
-
-### קבלת רשימת חופשות
-```
-GET /api/v1/vacations?page=1
+### Get Current User
+```http
+GET /auth/me
 ```
 
-**פרמטרים אופציונליים:**
-- page: מספר העמוד (ברירת מחדל: 1)
-- limit: מספר תוצאות בעמוד (ברירת מחדל: 9)
+**Headers:**
+```
+Authorization: Bearer {token}
+```
 
-**תשובה מוצלחת:**
+**Response:**
 ```json
 {
-  "vacations": [
-    {
+  "user": {
+    "id": "number",
+    "firstName": "string",
+    "lastName": "string",
+    "email": "string",
+    "role": "string"
+  }
+}
+```
+
+## 🏖️ Vacations
+
+### Get All Vacations
+```http
+GET /vacations
+```
+
+**Headers:**
+```
+Authorization: Bearer {token}
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "data": {
+    "vacations": [
+      {
+        "id": "number",
+        "destination": "string",
+        "description": "string",
+        "startDate": "date",
+        "endDate": "date",
+        "price": "number",
+        "imageUrl": "string",
+        "followersCount": "number",
+        "isFollowing": "boolean"
+      }
+    ]
+  }
+}
+```
+
+### Get Single Vacation
+```http
+GET /vacations/{id}
+```
+
+**Headers:**
+```
+Authorization: Bearer {token}
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "data": {
+    "vacation": {
       "id": "number",
       "destination": "string",
       "description": "string",
-      "startDate": "string",
-      "endDate": "string",
+      "startDate": "date",
+      "endDate": "date",
       "price": "number",
       "imageUrl": "string",
       "followersCount": "number",
       "isFollowing": "boolean"
     }
-  ],
-  "totalPages": "number"
+  }
 }
 ```
 
-### קבלת חופשה ספציפית
-```
-GET /api/v1/vacations/:id
+### Create Vacation (Admin Only)
+```http
+POST /vacations
 ```
 
-**תשובה מוצלחת:**
+**Headers:**
+```
+Authorization: Bearer {token}
+Content-Type: multipart/form-data
+```
+
+**Request Body:**
+```
+destination: string
+description: string
+startDate: date
+endDate: date
+price: number
+image: file (optional)
+```
+
+**Response:**
 ```json
 {
-  "id": "number",
-  "destination": "string",
-  "description": "string",
-  "startDate": "string",
-  "endDate": "string",
-  "price": "number",
-  "imageUrl": "string",
-  "followersCount": "number",
-  "isFollowing": "boolean"
+  "status": "success",
+  "data": {
+    "vacation": {
+      "id": "number",
+      "destination": "string",
+      "description": "string",
+      "startDate": "date",
+      "endDate": "date",
+      "price": "number",
+      "imageUrl": "string"
+    }
+  }
 }
 ```
 
-### הוספת חופשה חדשה (מנהל)
-```
-POST /api/v1/vacations
+### Update Vacation (Admin Only)
+```http
+PUT /vacations/{id}
 ```
 
-**גוף הבקשה:**
+**Headers:**
+```
+Authorization: Bearer {token}
+Content-Type: multipart/form-data
+```
+
+**Request Body:**
+```
+destination: string
+description: string
+startDate: date
+endDate: date
+price: number
+image: file (optional)
+```
+
+**Response:**
 ```json
 {
-  "destination": "string",
-  "description": "string",
-  "startDate": "string",
-  "endDate": "string",
-  "price": "number",
-  "imageUrl": "string"
+  "status": "success",
+  "data": {
+    "vacation": {
+      "id": "number",
+      "destination": "string",
+      "description": "string",
+      "startDate": "date",
+      "endDate": "date",
+      "price": "number",
+      "imageUrl": "string"
+    }
+  }
 }
 ```
 
-**תשובה מוצלחת:**
+### Delete Vacation (Admin Only)
+```http
+DELETE /vacations/{id}
+```
+
+**Headers:**
+```
+Authorization: Bearer {token}
+```
+
+**Response:**
 ```json
 {
-  "id": "number",
-  "destination": "string",
-  "description": "string",
-  "startDate": "string",
-  "endDate": "string",
-  "price": "number",
-  "imageUrl": "string",
-  "followersCount": 0,
-  "isFollowing": false
-}
-```
-
-### עדכון חופשה (מנהל)
-```
-PUT /api/v1/vacations/:id
-```
-
-**גוף הבקשה:**
-```json
-{
-  "destination": "string",
-  "description": "string",
-  "startDate": "string",
-  "endDate": "string",
-  "price": "number",
-  "imageUrl": "string"
-}
-```
-
-**תשובה מוצלחת:**
-```json
-{
-  "id": "number",
-  "destination": "string",
-  "description": "string",
-  "startDate": "string",
-  "endDate": "string",
-  "price": "number",
-  "imageUrl": "string",
-  "followersCount": "number",
-  "isFollowing": "boolean"
-}
-```
-
-### מחיקת חופשה (מנהל)
-```
-DELETE /api/v1/vacations/:id
-```
-
-**תשובה מוצלחת:**
-```json
-{
+  "status": "success",
   "message": "Vacation deleted successfully"
 }
 ```
 
-### מעקב/ביטול מעקב אחר חופשה
-```
-POST /api/v1/vacations/:id/follow
+### Follow Vacation
+```http
+POST /vacations/{id}/follow
 ```
 
-**תשובה מוצלחת:**
+**Headers:**
+```
+Authorization: Bearer {token}
+```
+
+**Response:**
 ```json
 {
-  "id": "number",
-  "destination": "string",
-  "description": "string",
-  "startDate": "string",
-  "endDate": "string",
-  "price": "number",
-  "imageUrl": "string",
-  "followersCount": "number",
-  "isFollowing": "boolean"
+  "status": "success",
+  "message": "Vacation followed successfully"
 }
 ```
 
-## סטטיסטיקות
-
-### קבלת סטטיסטיקות (מנהל)
-```
-GET /api/v1/vacations/stats
+### Unfollow Vacation
+```http
+DELETE /vacations/{id}/follow
 ```
 
-**תשובה מוצלחת:**
+**Headers:**
+```
+Authorization: Bearer {token}
+```
+
+**Response:**
 ```json
 {
-  "labels": ["string"],
-  "data": ["number"]
+  "status": "success",
+  "message": "Vacation unfollowed successfully"
 }
-``` 
+```
+
+## 📊 Statistics (Admin Only)
+
+### Get Followers Statistics
+```http
+GET /vacations/stats/followers
+```
+
+**Headers:**
+```
+Authorization: Bearer {token}
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "data": {
+    "stats": [
+      {
+        "destination": "string",
+        "followers": "number"
+      }
+    ]
+  }
+}
+```
+
+### Export to CSV
+```http
+GET /vacations/export/csv
+```
+
+**Headers:**
+```
+Authorization: Bearer {token}
+```
+
+**Response:**
+```
+CSV file download
+```
+
+## 🚨 Error Responses
+
+### 400 Bad Request
+```json
+{
+  "status": "error",
+  "message": "Invalid input data"
+}
+```
+
+### 401 Unauthorized
+```json
+{
+  "status": "error",
+  "message": "Please authenticate"
+}
+```
+
+### 403 Forbidden
+```json
+{
+  "status": "error",
+  "message": "You don't have permission to perform this action"
+}
+```
+
+### 404 Not Found
+```json
+{
+  "status": "error",
+  "message": "Resource not found"
+}
+```
+
+### 500 Server Error
+```json
+{
+  "status": "error",
+  "message": "Internal server error"
+}
+```
+
+## 📝 Notes
+
+1. כל הבקשות (חוץ מהרשמה והתחברות) דורשות טוקן JWT בכותרת Authorization
+2. תמונות נשמרות בתיקיית uploads/vacations
+3. גודל מקסימלי לתמונה: 5MB
+4. פורמטים נתמכים לתמונות: jpg, jpeg, png, gif
+5. כל התאריכים בפורמט ISO 8601
+6. כל המחירים בשקלים חדשים

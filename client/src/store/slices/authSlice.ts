@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthState, LoginSuccess } from '../../types';
 import { authService } from '../../services/auth.service';
+import axiosInstance from '../../services/axios.config';
 
 // Initialize state from authService
 const initialState: AuthState = {
@@ -10,6 +11,12 @@ const initialState: AuthState = {
   error: null,
   isAuthenticated: authService.isAuthenticated(),
 };
+
+// Initialize axios headers if token exists
+const token = authService.getToken();
+if (token) {
+  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
 
 const authSlice = createSlice({
   name: 'auth',
@@ -55,6 +62,13 @@ const authSlice = createSlice({
       state.isAuthenticated = !!user && !!token;
       state.loading = false;
       state.error = null;
+
+      // Update axios headers
+      if (token) {
+        axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      } else {
+        delete axiosInstance.defaults.headers.common['Authorization'];
+      }
     },
   },
 });

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import {
   Box,
@@ -10,13 +10,12 @@ import {
   Container,
   Alert,
   CircularProgress,
-  Link,
   IconButton,
   InputAdornment,
   Tooltip,
 } from '@mui/material';
 import { Visibility, VisibilityOff, Info } from '@mui/icons-material';
-import { useAppDispatch } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { loginStart, loginSuccess, loginFailure } from '../../store/slices/authSlice';
 import { authService } from '../../services/auth.service';
 
@@ -44,11 +43,18 @@ const initialValues: LoginFormValues = {
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { isAuthenticated } = useAppSelector(state => state.auth);
   const [values, setValues] = useState<LoginFormValues>(initialValues);
   const [errors, setErrors] = useState<Partial<LoginFormValues>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/vacations');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -67,6 +73,8 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    
     setIsSubmitting(true);
     setErrorMessage(null);
 
@@ -80,7 +88,7 @@ const Login: React.FC = () => {
       console.log('Login successful');
       
       dispatch(loginSuccess(response));
-      navigate('/vacations');
+      // הניווט יתבצע דרך ה-useEffect
     } catch (error) {
       console.error('Login error:', error);
 
@@ -101,6 +109,10 @@ const Login: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
+  if (isAuthenticated) {
+    return null;
+  }
 
   return (
     <Container maxWidth="xs">
@@ -264,11 +276,11 @@ const Login: React.FC = () => {
                 }
               }}
             />
+
             <Button
-              color="primary"
-              variant="contained"
-              fullWidth
               type="submit"
+              fullWidth
+              variant="contained"
               disabled={isSubmitting}
               sx={{ 
                 mt: 3, 
@@ -276,49 +288,22 @@ const Login: React.FC = () => {
                 height: 48,
                 borderRadius: 1,
                 fontSize: '1.1rem',
-                textTransform: 'none',
-                position: 'relative',
+                fontWeight: 'bold',
                 '&:hover': {
-                  backgroundColor: 'primary.dark',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)',
                 },
-                '&.Mui-disabled': {
-                  backgroundColor: 'action.disabledBackground',
-                }
+                '&:active': {
+                  transform: 'translateY(0)',
+                },
               }}
             >
               {isSubmitting ? (
-                <CircularProgress 
-                  size={24} 
-                  color="inherit" 
-                  sx={{ 
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    marginTop: '-12px',
-                    marginLeft: '-12px',
-                  }}
-                />
+                <CircularProgress size={24} color="inherit" />
               ) : (
                 'התחבר'
               )}
             </Button>
-
-            <Box sx={{ textAlign: 'center', mt: 2 }}>
-              <Link
-                component={RouterLink}
-                to="/register"
-                variant="body2"
-                sx={{
-                  color: 'primary.main',
-                  textDecoration: 'none',
-                  '&:hover': {
-                    textDecoration: 'underline',
-                  }
-                }}
-              >
-                אין לך חשבון? הירשם כאן
-              </Link>
-            </Box>
           </form>
         </Paper>
       </Box>

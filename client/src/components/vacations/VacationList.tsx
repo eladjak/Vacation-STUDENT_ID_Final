@@ -11,18 +11,33 @@ import {
 import VacationCard from './VacationCard';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { fetchVacations, deleteVacation } from '../../store/slices/vacationSlice';
+import { useNavigate } from 'react-router-dom';
 
 const VacationList: React.FC = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { items: vacations, loading, error } = useAppSelector(state => state.vacations);
-  const { user } = useAppSelector(state => state.auth);
+  const { user, isAuthenticated } = useAppSelector(state => state.auth);
   const isAdmin = user?.role === 'admin';
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   useEffect(() => {
-    dispatch(fetchVacations());
-  }, [dispatch]);
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    
+    const loadVacations = async () => {
+      try {
+        await dispatch(fetchVacations()).unwrap();
+      } catch (error) {
+        console.error('Failed to load vacations:', error);
+      }
+    };
+
+    loadVacations();
+  }, [dispatch, isAuthenticated, navigate]);
 
   const handleDelete = async (id: number) => {
     try {
@@ -32,6 +47,10 @@ const VacationList: React.FC = () => {
       setDeleteError('שגיאה במחיקת החופשה. אנא נסה שוב.');
     }
   };
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   if (loading) {
     return (

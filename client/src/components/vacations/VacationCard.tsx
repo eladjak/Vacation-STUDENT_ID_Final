@@ -6,16 +6,13 @@ import {
   Typography,
   Box,
   IconButton,
-  useTheme,
-  useMediaQuery,
   Grid,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Button,
-  Tooltip,
-  Fade
+  Tooltip
 } from '@mui/material';
 import { 
   Favorite, 
@@ -25,7 +22,7 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { Vacation } from '../../types';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { useAppDispatch } from '../../hooks/redux';
 import { followVacation, unfollowVacation } from '../../store/slices/vacationSlice';
 
 interface VacationCardProps {
@@ -35,11 +32,8 @@ interface VacationCardProps {
 }
 
 const VacationCard: React.FC<VacationCardProps> = ({ vacation, isAdmin, onDelete }) => {
-  const theme = useTheme();
   const navigate = useNavigate();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector(state => state.auth);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleFollowClick = () => {
@@ -54,250 +48,112 @@ const VacationCard: React.FC<VacationCardProps> = ({ vacation, isAdmin, onDelete
     navigate(`/admin/edit-vacation/${vacation.id}`);
   };
 
-  const handleDeleteClick = () => {
-    setDeleteDialogOpen(true);
-  };
-
-  const handleDeleteConfirm = () => {
+  const handleDelete = () => {
     if (onDelete) {
       onDelete(vacation.id);
+      setDeleteDialogOpen(false);
     }
-    setDeleteDialogOpen(false);
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('he-IL', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+  const getImageUrl = (url: string | null, destination: string) => {
+    if (!url) {
+      return getDefaultImage(destination);
+    }
+    return `${process.env.REACT_APP_API_URL || 'http://localhost:3001'}${url}`;
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('he-IL', {
-      style: 'currency',
-      currency: 'ILS'
-    }).format(price);
+  const getDefaultImage = (destination: string) => {
+    return `https://source.unsplash.com/800x600/?${encodeURIComponent(destination)}`;
   };
 
   return (
     <Grid item xs={12} sm={6} md={4}>
-      <Fade in={true} timeout={500}>
-        <Card 
-          sx={{ 
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            transition: 'all 0.3s ease-in-out',
-            '&:hover': {
-              transform: 'translateY(-4px)',
-              boxShadow: theme.shadows[8]
-            },
-            position: 'relative'
-          }}
-        >
+      <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ position: 'relative', paddingTop: '56.25%' }}>
           <CardMedia
             component="img"
-            height={isMobile ? 200 : 250}
-            image={vacation.imageUrl}
+            image={getImageUrl(vacation.imageUrl, vacation.destination)}
             alt={vacation.destination}
-            sx={{ 
-              objectFit: 'cover',
-              position: 'relative'
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover'
             }}
           />
-          
-          {isAdmin ? (
-            <Box 
-              sx={{ 
-                position: 'absolute',
-                top: 8,
-                right: 8,
-                display: 'flex',
-                gap: 1,
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                borderRadius: '8px',
-                padding: '4px'
-              }}
-            >
-              <Tooltip title="ערוך חופשה">
-                <IconButton 
-                  size="small"
-                  onClick={handleEditClick}
-                  sx={{
-                    color: theme.palette.primary.main,
-                    '&:hover': {
-                      backgroundColor: 'rgba(25, 118, 210, 0.1)'
-                    }
-                  }}
-                >
-                  <EditIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="מחק חופשה">
-                <IconButton 
-                  size="small"
-                  onClick={handleDeleteClick}
-                  sx={{
-                    color: theme.palette.error.main,
-                    '&:hover': {
-                      backgroundColor: 'rgba(211, 47, 47, 0.1)'
-                    }
-                  }}
-                >
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          ) : user && (
-            <Tooltip title={vacation.isFollowing ? 'הסר מהמועדפים' : 'הוסף למועדפים'}>
-              <IconButton
-                onClick={handleFollowClick}
-                sx={{
-                  position: 'absolute',
-                  top: 8,
-                  right: 8,
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  color: vacation.isFollowing ? theme.palette.error.main : theme.palette.action.active,
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 1)',
-                    transform: 'scale(1.1)'
-                  },
-                  transition: 'all 0.2s ease-in-out'
-                }}
-              >
-                {vacation.isFollowing ? <Favorite /> : <FavoriteBorder />}
-              </IconButton>
-            </Tooltip>
-          )}
+        </Box>
 
-          <CardContent sx={{ flexGrow: 1, p: isMobile ? 2 : 3 }}>
-            <Typography 
-              variant={isMobile ? "h6" : "h5"} 
-              component="h2" 
-              gutterBottom
-              sx={{ 
-                fontWeight: 'bold',
-                color: theme.palette.primary.main,
-                mb: 2
-              }}
-            >
+        <CardContent sx={{ flexGrow: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+            <Typography variant="h6" component="h2" gutterBottom>
               {vacation.destination}
             </Typography>
-
-            <Typography 
-              variant="body1" 
-              color="text.secondary" 
-              paragraph
-              sx={{ 
-                mb: 2,
-                minHeight: isMobile ? 'auto' : '4.5em',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                display: '-webkit-box',
-                WebkitLineClamp: 3,
-                WebkitBoxOrient: 'vertical'
-              }}
-            >
-              {vacation.description}
-            </Typography>
-
-            <Box sx={{ mt: 'auto' }}>
-              <Typography 
-                variant="body2" 
-                color="text.secondary" 
-                gutterBottom
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Typography
+                variant="caption"
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: 0.5,
-                  mb: 2
+                  mr: 1
                 }}
               >
-                <strong>תאריכים:</strong> {formatDate(vacation.startDate)} - {formatDate(vacation.endDate)}
+                <Favorite fontSize="small" color="action" />
+                {vacation.followersCount} עוקבים
               </Typography>
-              
-              <Box sx={{ 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                alignItems: 'center',
-                mt: 2,
-                pt: 2,
-                borderTop: `1px solid ${theme.palette.divider}`
-              }}>
-                <Typography 
-                  variant="h6" 
-                  component="p"
-                  sx={{ 
-                    fontWeight: 'bold',
-                    color: theme.palette.primary.main
-                  }}
-                >
-                  {formatPrice(vacation.price)}
-                </Typography>
-                
-                <Typography 
-                  variant="body2" 
-                  color="text.secondary"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 0.5
-                  }}
-                >
-                  <Favorite fontSize="small" color="action" />
-                  {vacation.followersCount} עוקבים
-                </Typography>
-              </Box>
+              {!isAdmin && (
+                <Tooltip title={vacation.isFollowing ? 'הסר מעקב' : 'עקוב'}>
+                  <IconButton
+                    onClick={handleFollowClick}
+                    size="small"
+                    sx={{ bgcolor: 'background.paper' }}
+                  >
+                    {vacation.isFollowing ? <Favorite color="primary" /> : <FavoriteBorder />}
+                  </IconButton>
+                </Tooltip>
+              )}
             </Box>
-          </CardContent>
-        </Card>
-      </Fade>
+          </Box>
 
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-        PaperProps={{
-          sx: {
-            borderRadius: 2,
-            maxWidth: 400
-          }
-        }}
-      >
-        <DialogTitle sx={{ 
-          fontWeight: 'bold',
-          color: theme.palette.error.main,
-          pb: 1
-        }}>
-          מחיקת חופשה
-        </DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body2" color="text.secondary" paragraph>
+            {vacation.description}
+          </Typography>
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+            <Typography variant="h6" color="primary">
+              ₪{vacation.price.toLocaleString()}
+            </Typography>
+            {isAdmin && (
+              <Box>
+                <IconButton onClick={handleEditClick} size="small">
+                  <EditIcon />
+                </IconButton>
+                <IconButton onClick={() => setDeleteDialogOpen(true)} size="small" color="error">
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
+            )}
+          </Box>
+        </CardContent>
+
+        <Dialog
+          open={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+        >
+          <DialogTitle>מחיקת חופשה</DialogTitle>
+          <DialogContent>
             האם אתה בטוח שברצונך למחוק את החופשה ל{vacation.destination}?
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            פעולה זו אינה הפיכה.
-          </Typography>
-        </DialogContent>
-        <DialogActions sx={{ p: 2, pt: 0 }}>
-          <Button 
-            onClick={() => setDeleteDialogOpen(false)}
-            variant="outlined"
-            color="inherit"
-          >
-            ביטול
-          </Button>
-          <Button 
-            onClick={handleDeleteConfirm}
-            variant="contained"
-            color="error"
-            autoFocus
-          >
-            מחק
-          </Button>
-        </DialogActions>
-      </Dialog>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDeleteDialogOpen(false)}>ביטול</Button>
+            <Button onClick={handleDelete} color="error">
+              מחק
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Card>
     </Grid>
   );
 };

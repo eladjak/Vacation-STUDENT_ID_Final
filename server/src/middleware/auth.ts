@@ -1,45 +1,78 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { AppError } from './errorHandler';
-import { UserService } from '../services/user.service';
-import { logger } from '../utils/logger';
+import { User } from '../entities/user.entity';
+import { AppDataSource } from '../config/data-source';
+
+interface JwtPayload {
+  userId: number;
+}
 
 declare global {
   namespace Express {
     interface Request {
-      user?: any;
-      token?: string;
+      user?: User;
     }
   }
 }
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    
-    if (!token) {
-      logger.error('No token provided');
-      throw new AppError(401, 'Authentication required');
+    // Get token from header
+    const authHeader = req.header('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'אין הרשאה. נדרשת הזדהות.'
+      });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key') as any;
-    const userService = new UserService();
+    const token = authHeader.replace('Bearer ', '');
     
-    try {
-      const user = await userService.findById(decoded.id);
-      req.user = user;
-      req.token = token;
-      next();
-    } catch (error) {
-      logger.error('User not found or invalid token');
-      throw new AppError(401, 'Authentication failed');
+    // Check if JWT_SECRET exists
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      console.error('JWT_SECRET is not defined');
+      return res.status(500).json({
+        status: 'error',
+        message: 'שגיאת הגדרות שרת'
+      });
     }
+
+    // Verify token
+    const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
+
+    // Get user from database
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({ where: { id: decoded.userId } });
+
+    if (!user) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'משתמש לא נמצא'
+      });
+    }
+
+    // Add user to request
+    req.user = user;
+
+    next();
   } catch (error) {
-    if (error instanceof AppError) {
-      next(error);
-    } else {
-      logger.error('Auth middleware error:', error);
-      next(new AppError(401, 'Authentication failed'));
+    console.error('Auth middleware error:', error);
+    if (error instanceof jwt.JsonWebTokenError) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'טוקן לא תקין'
+      });
     }
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'טוקן פג תוקף'
+      });
+    }
+    res.status(401).json({
+      status: 'error',
+      message: 'שגיאת אימות'
+    });
   }
 }; 

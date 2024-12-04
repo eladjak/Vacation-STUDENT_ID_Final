@@ -6,31 +6,18 @@ interface VacationsState {
   items: Vacation[];
   loading: boolean;
   error: string | null;
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
 }
 
 const initialState: VacationsState = {
   items: [],
   loading: false,
-  error: null,
-  pagination: {
-    page: 1,
-    limit: 10,
-    total: 0,
-    totalPages: 0
-  }
+  error: null
 };
 
 export const fetchVacations = createAsyncThunk(
   'vacations/fetchVacations',
   async () => {
-    const response = await vacationService.getAll();
-    return response;
+    return await vacationService.getAll();
   }
 );
 
@@ -58,6 +45,14 @@ export const deleteVacation = createAsyncThunk(
   }
 );
 
+export const createVacation = createAsyncThunk(
+  'vacations/createVacation',
+  async (formData: FormData) => {
+    await vacationService.create(formData);
+    return await vacationService.getAll();
+  }
+);
+
 const vacationsSlice = createSlice({
   name: 'vacations',
   initialState,
@@ -71,12 +66,7 @@ const vacationsSlice = createSlice({
       })
       .addCase(fetchVacations.fulfilled, (state, action) => {
         state.loading = false;
-        if ('vacations' in action.payload) {
-          state.items = action.payload.vacations;
-          state.pagination = action.payload.pagination;
-        } else {
-          state.items = action.payload;
-        }
+        state.items = action.payload;
         state.error = null;
       })
       .addCase(fetchVacations.rejected, (state, action) => {
@@ -85,30 +75,29 @@ const vacationsSlice = createSlice({
       })
       // Follow vacation
       .addCase(followVacation.fulfilled, (state, action) => {
-        if ('vacations' in action.payload) {
-          state.items = action.payload.vacations;
-          state.pagination = action.payload.pagination;
-        } else {
-          state.items = action.payload;
-        }
+        state.items = action.payload;
       })
       // Unfollow vacation
       .addCase(unfollowVacation.fulfilled, (state, action) => {
-        if ('vacations' in action.payload) {
-          state.items = action.payload.vacations;
-          state.pagination = action.payload.pagination;
-        } else {
-          state.items = action.payload;
-        }
+        state.items = action.payload;
       })
       // Delete vacation
       .addCase(deleteVacation.fulfilled, (state, action) => {
-        if ('vacations' in action.payload) {
-          state.items = action.payload.vacations;
-          state.pagination = action.payload.pagination;
-        } else {
-          state.items = action.payload;
-        }
+        state.items = action.payload;
+      })
+      // Create vacation
+      .addCase(createVacation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createVacation.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+        state.error = null;
+      })
+      .addCase(createVacation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'שגיאה ביצירת החופשה';
       });
   },
 });

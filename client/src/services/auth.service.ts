@@ -17,10 +17,18 @@ interface AuthResponse {
 }
 
 class AuthService {
+  constructor() {
+    // Initialize token from localStorage if exists
+    const token = localStorage.getItem('token');
+    if (token) {
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+  }
+
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
       console.log('Attempting login with:', { email: credentials.email });
-      const response = await axiosInstance.post<AuthResponse>('/users/login', credentials);
+      const response = await axiosInstance.post<AuthResponse>('/auth/login', credentials);
       console.log('Login response:', response.data);
       if (response.data.token && response.data.user) {
         this.setSession(response.data);
@@ -36,7 +44,7 @@ class AuthService {
   async register(credentials: RegisterCredentials): Promise<AuthResponse> {
     try {
       console.log('Attempting registration with:', { email: credentials.email });
-      const response = await axiosInstance.post<AuthResponse>('/users/register', credentials);
+      const response = await axiosInstance.post<AuthResponse>('/auth/register', credentials);
       console.log('Registration response:', response.data);
       if (response.data.token && response.data.user) {
         this.setSession(response.data);
@@ -56,9 +64,11 @@ class AuthService {
 
   private setSession(authData: AuthResponse): void {
     console.log('Setting session data...');
-    localStorage.setItem('token', authData.token);
+    const token = authData.token;
+    localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(authData.user));
-    axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${authData.token}`;
+    axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    console.log('Authorization header set:', axiosInstance.defaults.headers.common['Authorization']);
   }
 
   private clearSession(): void {

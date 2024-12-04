@@ -1,14 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
-import { AppError } from './errorHandler';
-import { UserRole } from '../entities/User';
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   if (!req.user) {
-    return next(new AppError(401, 'Authentication required'));
+    return res.status(401).json({
+      status: 'error',
+      message: 'אין הרשאה. נדרשת הזדהות.'
+    });
   }
 
-  if (req.user.role !== UserRole.ADMIN) {
-    return next(new AppError(403, 'Admin access required'));
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({
+      status: 'error',
+      message: 'אין הרשאות מנהל לביצוע פעולה זו.'
+    });
   }
 
   next();

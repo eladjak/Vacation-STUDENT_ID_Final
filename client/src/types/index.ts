@@ -4,7 +4,7 @@ export interface VacationFormValues {
   description: string;
   startDate: Date | null;
   endDate: Date | null;
-  price: string;
+  price: number;
   image: File | null;
 }
 
@@ -15,6 +15,8 @@ export interface User {
   lastName: string;
   email: string;
   role: 'user' | 'admin';
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Vacation {
@@ -24,7 +26,7 @@ export interface Vacation {
   startDate: string;
   endDate: string;
   price: number;
-  imageUrl: string;
+  imageUrl: string | null;
   followersCount: number;
   isFollowing?: boolean;
 }
@@ -54,12 +56,32 @@ export interface LoginSuccess {
   token: string;
 }
 
-export interface VacationResponse {
+export interface ApiResponse<T> {
+  status: string;
+  data: T;
+}
+
+export interface VacationResponse extends ApiResponse<{
   vacations: Vacation[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
+}> {}
+
+export interface VacationStatsResponse extends ApiResponse<{
+  stats: Array<{
+    destination: string;
+    followers: number;
+  }>;
+}> {}
+
+// Router Types
+export interface Location {
+  pathname: string;
+  search: string;
+  hash: string;
+  state: unknown;
+  key: string;
+}
+
+export interface BlockerFunction {
+  currentLocation: Location;
+  nextLocation: Location;
 } 

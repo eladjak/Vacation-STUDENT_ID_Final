@@ -14,7 +14,8 @@ import {
 import { DatePicker } from '@mui/x-date-pickers';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { vacationService } from '../../services/vacation.service';
+import { useAppDispatch } from '../../hooks/redux';
+import { createVacation } from '../../store/slices/vacationSlice';
 
 interface VacationFormValues {
   destination: string;
@@ -50,6 +51,7 @@ const validationSchema = Yup.object({
 
 const AddVacation: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [error, setError] = useState<string | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -80,7 +82,7 @@ const AddVacation: React.FC = () => {
           formData.append('image', values.image);
         }
 
-        await vacationService.create(formData);
+        await dispatch(createVacation(formData)).unwrap();
         navigate('/');
       } catch (err) {
         console.error('Error creating vacation:', err);
