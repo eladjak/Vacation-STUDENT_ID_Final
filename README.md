@@ -1,6 +1,6 @@
 # 🌴 VacationVibe
 
-![VacationVibe Logo](client/public/logo.svg)
+<img src="client/public/logo.svg" alt="VacationVibe Logo" width="200" height="200">
 
 > מערכת מתקדמת לניהול והצגת חופשות, המאפשרת למשתמשים לעקוב אחר יעדי נופש מועדפים ולמנהלים לנהל את מאגר החופשות.
 
