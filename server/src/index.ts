@@ -17,6 +17,11 @@ app.use(express.json());
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/vacations', auth, vacationRoutes);

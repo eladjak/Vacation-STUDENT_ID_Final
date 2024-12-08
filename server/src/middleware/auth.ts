@@ -5,6 +5,7 @@ import { AppDataSource } from '../config/data-source';
 
 interface JwtPayload {
   userId: number;
+  role: string;
 }
 
 declare global {
@@ -40,12 +41,28 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
 
     // Verify token
     const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
+    console.log('Token verified:', { decoded });
 
     // Get user from database
     const userRepository = AppDataSource.getRepository(User);
-    const user = await userRepository.findOne({ where: { id: decoded.userId } });
+    // Handle both token formats (id and userId)
+    const userId = decoded.userId;
+
+    if (!userId) {
+      console.error('Invalid token payload:', decoded);
+      return res.status(401).json({
+        status: 'error',
+        message: 'טוקן לא תקין'
+      });
+    }
+
+    const user = await userRepository.findOne({ 
+      where: { id: userId },
+      select: ['id', 'email', 'firstName', 'lastName', 'role'] 
+    });
 
     if (!user) {
+      console.error('User not found for token:', { userId });
       return res.status(401).json({
         status: 'error',
         message: 'משתמש לא נמצא'
@@ -54,6 +71,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
 
     // Add user to request
     req.user = user;
+    console.log('Auth successful:', { userId: user.id, role: user.role });
 
     next();
   } catch (error) {

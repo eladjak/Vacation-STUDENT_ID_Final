@@ -1,160 +1,83 @@
-# 🌴 VacationVibe - מערכת ניהול חופשות
+`````
+# VacationVibe - מערכת ניהול חופשות
 
-מערכת חדשנית לניהול והזמנת חופשות, המאפשרת למשתמשים לגלות, לעקוב ולנהל חופשות בצורה קלה ונוחה. המערכת כוללת ממשק משתמש מודרני, ניהול הרשאות, ותצוגת סטטיסטיקות למנהלים.
+## פרטי המפתח
+- **שם:** אלעד יעקובוביץ'
+- **גיל:** 38
+- **התמחות:** מפתח Full-Stack
+- **הכשרה:** בוגר מכללת ג'ון ברייס
 
-## ✨ תכונות עיקריות
+### פרטי התקשרות
+- **אימייל:** eladhiteclearning@gmail.com
+- **לינקדאין:** [linkedin.com/in/eladyaakobovitchcodingdeveloper](https://www.linkedin.com/in/eladyaakobovitchcodingdeveloper/)
+- **גיטהאב:** [github.com/eladjak](https://github.com/eladjak)
+- **טלפון:** 052-542-7474
 
-- 🔐 מערכת הרשאות מתקדמת (משתמשים רגילים ומנהלים)
-- 📱 ממשק משתמש רספונסיבי ומודרני
-- 🎨 עיצוב נקי ואינטואיטיבי
-- 📊 סטטיסטיקות ודוחות מתקדמים למנהלים
-- ❤️ מערכת מעקב אחר חופשות מועדפות
-- 🌐 תמיכה מלאה בעברית ו-RTL
-- 🔄 שמירה אוטומטית בזמן עריכה
-- 📸 תמיכה בתמונות חופשה
-- 📅 ניהול תאריכים חכם
+## תיאור הפרויקט
+VacationVibe היא מערכת מתקדמת לניהול והצגת חופשות, המאפשרת למשתמשים לעקוב אחר יעדי נופש מועדפים ולמנהלים לנהל את מאגר החופשות.
 
-## 🛠️ טכנולוגיות
+### תכונות עיקריות
+- **צפייה בחופשות:** הצגת חופשות עם תמונות, תיאורים ומחירים
+- **מעקב אחר חופשות:** משתמשים יכולים לעקוב אחר חופשות מעניינות
+- **ניהול מערכת:** ממשק ניהול למנהלים לעדכון והוספת חופשות
+- **סטטיסטיקות:** גרפים והתפלגויות של מעקב משתמשים אחר חופשות
+- **אבטחה:** מערכת הרשאות מתקדמת ואימות משתמשים
 
-### צד לקוח (Frontend)
-- React 18 עם TypeScript
-- Material-UI (MUI) לעיצוב מודרני
-- Redux Toolkit לניהול מצב אפליקציה
-- React Router לניווט
-- Axios לתקשורת עם השרת
-- Chart.js לתצוגת גרפים
-- Formik ו-Yup לטיפול בטפסים ותיקוף
+### טכנולוגיות
+- **צד לקוח:** React, TypeScript, Material-UI, Redux
+- **צד שרת:** Node.js, Express, TypeORM
+- **בסיס נתונים:** MySQL
+- **קאש:** Redis
+- **תשתית:** Docker
 
-### צד שרת (Backend)
-- Node.js עם Express
-- TypeScript לפיתוח מאובטח
-- TypeORM לניהול בסיס הנתונים
-- MySQL לאחסון נתונים
-- JWT לאימות משתמשים
-- Multer לטיפול בהעלאת קבצים
-
-## 🚀 התקנה
+## התקנה והרצה
 
 ### דרישות מקדימות
-- Node.js (גרסה 18 ומעלה)
-- MySQL (גרסה 8 ומעלה)
+- Docker Desktop מותקן ופעיל
+- Node.js גרסה 18 ומעלה
+- פורטים פנויים: 80, 3001, 3306, 6379
 
-### שלבי התקנה
+### הוראות הרצה
+1. שכפל את הפרויקט:
+   ```bash
+   git clone [repository-url]
+   cd vacation-student-id-final
+   ```
 
-1. שכפל את המאגר:
-\`\`\`bash
-git clone https://github.com/YOUR_USERNAME/vacation-vibe.git
-cd vacation-vibe
-\`\`\`
+2. הגדר קובץ .env בתיקיית deployment:
+   ```env
+   DB_USERNAME=vacation_user
+   DB_PASSWORD=vacation123
+   DB_DATABASE=vacation_db
+   DB_ROOT_PASSWORD=root123
+   JWT_SECRET=your_secret_key
+   ```
 
-2. התקן את הספריות הנדרשות:
-\`\`\`bash
-# התקנת ספריות צד לקוח
-cd client
-npm install
+3. הרץ את הפרויקט עם Docker:
+   ```bash
+   cd deployment/scripts
+   docker-build.bat
+   docker-start.bat
+   ```
 
-# התקנת ספריות צד שרת
-cd ../server
-npm install
-\`\`\`
+4. גש לאפליקציה:
+   - ממשק משתמש: http://localhost
+   - שרת: http://localhost:3001
 
-3. הגדר את קובץ ה-.env בתיקיית השרת:
-\`\`\`env
-PORT=3001
-DB_HOST=localhost
-DB_PORT=3306
-DB_USERNAME=root
-DB_PASSWORD=your_password
-DB_DATABASE=vacation_db
-JWT_SECRET=your_secret_key
-CLIENT_URL=http://localhost:3000
-\`\`\`
+### משתמשים לדוגמה
+- **מנהל:**
+  - אימייל: admin@example.com
+  - סיסמה: admin123
+- **משתמש רגיל:**
+  - אימייל: user@example.com
+  - סיסמה: user123
 
-4. צור את בסיס הנתונים והזן נתוני דוגמה:
-\`\`\`bash
-cd server
-npm run seed
-\`\`\`
+## תיעוד נוסף
+- [מבנה הפרויקט](docs/project-structure.md)
+- [מדריך למשתמש](docs/user-guide.md)
+- [תיעוד API](docs/api.md)
+- [אפשרויות פריסה](docs/development/05-deployment-options.md)
 
-5. הפעל את השרת:
-\`\`\`bash
-npm run dev
-\`\`\`
-
-6. הפעל את הלקוח:
-\`\`\`bash
-cd ../client
-npm start
-\`\`\`
-
-## 👥 משתמשי ברירת מחדל
-
-### מנהל מערכת
-- אימייל: admin@test.com
-- סיסמה: 123456
-
-### משתמש רגיל
-- אימייל: user@test.com
-- סיסמה: 123456
-
-## 📁 מבנה הפרויקט
-
-\`\`\`
-vacation-vibe/
-├── client/                # צד לקוח
-│   ├── public/           # קבצים סטטיים
-│   └── src/              # קוד מקור
-│       ├── components/   # רכיבי React
-│       ├── services/     # שירותי API
-│       ├── store/        # ניהול מצב (Redux)
-│       └── types/        # טיפוסי TypeScript
-│
-└── server/               # צד שרת
-    ├── src/             # קוד מקור
-    │   ├── config/      # הגדרות
-    │   ├── controllers/ # בקרים
-    │   ├── entities/    # ישויות TypeORM
-    │   ├── middleware/  # middleware
-    │   ├── routes/      # נתיבי API
-    │   └── services/    # שירותים
-    └── uploads/         # קבצים שהועלו
-\`\`\`
-
-## 🔜 פיתוח עתידי
-
-### תכונות מתוכננות
-1. 🌍 תמיכה במספר שפות (i18n)
-2. 🎯 מערכת המלצות חכמה
-3. 📱 אפליקציית מובייל
-4. 💳 מערכת תשלומים
-5. 🗺️ אינטגרציה עם מפות
-6. 📧 מערכת התראות במייל
-7. 💬 צ'אט תמיכה
-8. 🎟️ מערכת קופונים והנחות
-9. 📊 דוחות מתקדמים נוספים
-10. 🔍 חיפוש מתקדם עם פילטרים
-
-### שיפורים טכניים מתוכננים
-1. 🚀 אופטימיזציה נוספת של ביצועים
-2. 📦 הוספת קאשינג
-3. 🧪 הרחבת כיסוי הבדיקות
-4. 📱 PWA תמיכה
-5. 🔐 שיפורי אבטחה נוספים
-
-## 🤝 תרומה לפרויקט
-
-1. צור fork למאגר
-2. צור ענף חדש (\`git checkout -b feature/amazing-feature\`)
-3. בצע commit לשינויים (\`git commit -m 'הוספת תכונה מדהימה'\`)
-4. דחוף לענף (\`git push origin feature/amazing-feature\`)
-5. פתח בקשת משיכה
-
-## 📄 רישיון
-
-מופץ תחת רישיון MIT. ראה \`LICENSE\` למידע נוסף.
-
-## 📞 יצירת קשר
-
-שם הפרויקט - [VacationVibe](https://github.com/yourusername/vacation-vibe)
-
-קישור לפרויקט: [https://github.com/yourusername/vacation-vibe](https://github.com/yourusername/vacation-vibe)
+## רישיון
+כל הזכויות שמורות © 2024
+`````

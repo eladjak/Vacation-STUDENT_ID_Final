@@ -14,20 +14,26 @@ export class AuthController {
 
   login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
+    
+    console.log('Login attempt:', { email }); // Do not log passwords
 
     try {
       // Find user
       const user = await this.userRepository.findOne({ where: { email } });
       if (!user) {
+        console.log('User not found:', email);
         return res.status(401).json({
           status: 'error',
           message: 'משתמש לא נמצא'
         });
       }
 
+      console.log('User found:', { id: user.id, email: user.email, role: user.role });
+
       // Check password
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
+        console.log('Password mismatch for user:', email);
         return res.status(401).json({
           status: 'error',
           message: 'סיסמה שגויה'
@@ -45,24 +51,29 @@ export class AuthController {
       }
 
       const token = jwt.sign(
-        { userId: user.id },
+        { userId: user.id, role: user.role },
         jwtSecret,
         { expiresIn: '24h' }
       );
 
-      // Remove password from response
-      const { password: _, ...userWithoutPassword } = user;
+      console.log('Login successful:', { userId: user.id, role: user.role });
 
-      // Send response in the format the client expects
-      res.json({
-        user: userWithoutPassword,
-        token
+      // Return success response
+      return res.json({
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          role: user.role
+        }
       });
     } catch (error) {
       console.error('Login error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         status: 'error',
-        message: 'שגיאה בהתחברות'
+        message: 'שגיאת שרת'
       });
     }
   };
@@ -105,18 +116,21 @@ export class AuthController {
       }
 
       const token = jwt.sign(
-        { userId: user.id },
+        { userId: user.id, role: user.role },
         jwtSecret,
         { expiresIn: '24h' }
       );
 
-      // Remove password from response
-      const { password: _, ...userWithoutPassword } = user;
-
       // Send response in the format the client expects
       res.status(201).json({
-        user: userWithoutPassword,
-        token
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          role: user.role
+        }
       });
     } catch (error) {
       console.error('Registration error:', error);
@@ -140,11 +154,15 @@ export class AuthController {
         });
       }
 
-      // Remove password from response
-      const { password: _, ...userWithoutPassword } = user;
-
+      // Return user data in consistent format
       res.json({
-        user: userWithoutPassword
+        user: {
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          role: user.role
+        }
       });
     } catch (error) {
       console.error('Get current user error:', error);

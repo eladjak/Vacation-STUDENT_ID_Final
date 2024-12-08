@@ -63,12 +63,19 @@ class AuthService {
   }
 
   private setSession(authData: AuthResponse): void {
-    console.log('Setting session data...');
+    console.log('Setting session data...', { token: authData.token?.substring(0, 20) + '...' });
     const token = authData.token;
+    if (!token || !authData.user) {
+      console.error('Invalid auth data:', { hasToken: !!token, hasUser: !!authData.user });
+      throw new Error('Invalid authentication data');
+    }
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(authData.user));
     axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    console.log('Authorization header set:', axiosInstance.defaults.headers.common['Authorization']);
+    console.log('Session data set successfully:', { 
+      userId: authData.user.id,
+      role: authData.user.role
+    });
   }
 
   private clearSession(): void {
@@ -76,12 +83,20 @@ class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     delete axiosInstance.defaults.headers.common['Authorization'];
+    console.log('Session data cleared successfully');
   }
 
   isAuthenticated(): boolean {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
-    return !!token && !!user;
+    const isAuth = !!token && !!user;
+    console.log('Auth check:', { 
+      isAuth, 
+      hasToken: !!token,
+      hasUser: !!user,
+      userId: user ? JSON.parse(user).id : null
+    });
+    return isAuth;
   }
 
   getUser(): User | null {

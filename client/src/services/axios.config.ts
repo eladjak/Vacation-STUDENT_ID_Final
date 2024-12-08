@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3001/api/v1',
+  baseURL: '/api/v1',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
@@ -14,6 +14,12 @@ axiosInstance.interceptors.request.use(
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('Added token to request:', { 
+        url: config.url,
+        tokenPrefix: token.substring(0, 20) + '...'
+      });
+    } else {
+      console.log('No token found for request:', config.url);
     }
     
     // Don't add Content-Type for FormData
@@ -21,11 +27,6 @@ axiosInstance.interceptors.request.use(
       delete config.headers['Content-Type'];
     }
     
-    console.log('Request:', { 
-      url: config.url, 
-      method: config.method,
-      headers: config.headers
-    });
     return config;
   },
   (error) => {
@@ -37,26 +38,31 @@ axiosInstance.interceptors.request.use(
 // Add a response interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log('Response:', { 
+    console.log('Response success:', { 
       url: response.config.url, 
-      status: response.status,
-      headers: response.headers
+      status: response.status
     });
     return response;
   },
   (error) => {
-    console.error('Response error:', error);
+    console.error('Response error:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      message: error.response?.data?.message
+    });
     
     // Handle network errors
     if (!error.response) {
-      console.error('Network error:', error.message);
       return Promise.reject(new Error('שגיאת רשת. אנא בדוק את החיבור שלך.'));
     }
 
     // Handle 401 Unauthorized
     if (error.response.status === 401) {
+      const currentPath = window.location.pathname;
       // Only clear token and redirect if we're not already on the login page
-      if (window.location.pathname !== '/login') {
+      // and not trying to login
+      if (currentPath !== '/login' && !error.config.url?.includes('/auth/login')) {
+        console.log('Unauthorized access, clearing session...');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';

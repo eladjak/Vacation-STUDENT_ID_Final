@@ -2,12 +2,35 @@ import { AppDataSource } from '../config/data-source';
 import { Vacation } from '../entities/vacation.entity';
 import { VacationFollow } from '../entities/vacation-follow.entity';
 import { User } from '../entities/user.entity';
+import bcrypt from 'bcryptjs';
 
 const seedDatabase = async () => {
   try {
     // Clear existing data
     await AppDataSource.getRepository(VacationFollow).delete({});
     await AppDataSource.getRepository(Vacation).delete({});
+    await AppDataSource.getRepository(User).delete({});
+
+    // Create admin user
+    const hashedPassword = await bcrypt.hash('123456', 10);
+    const admin = await AppDataSource.getRepository(User).save({
+      firstName: 'Admin',
+      lastName: 'User',
+      email: 'admin@test.com',
+      password: hashedPassword,
+      role: 'admin'
+    });
+    console.log('Admin user created');
+
+    // Create regular user
+    const user = await AppDataSource.getRepository(User).save({
+      firstName: 'Regular',
+      lastName: 'User',
+      email: 'user@test.com',
+      password: hashedPassword,
+      role: 'user'
+    });
+    console.log('Regular user created');
 
     // Create vacations
     const vacations = await Promise.all([
