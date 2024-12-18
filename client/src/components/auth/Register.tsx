@@ -1,3 +1,20 @@
+/**
+ * Register Component
+ * 
+ * A comprehensive registration form component with validation and error handling
+ * Features:
+ * - First name and last name fields
+ * - Email validation
+ * - Password validation
+ * - Form validation using Formik
+ * - Error messages in Hebrew
+ * - Responsive design
+ * - Automatic login after successful registration
+ * - RTL support
+ * 
+ * @component
+ */
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form, FormikHelpers } from 'formik';
@@ -7,6 +24,14 @@ import { Box, Button, TextField, Typography, Paper, Container } from '@mui/mater
 import axios from 'axios';
 import { loginSuccess } from '../../store/slices/authSlice';
 
+/**
+ * Validation schema for registration form
+ * Validates:
+ * - Required first name
+ * - Required last name
+ * - Valid email format
+ * - Password minimum length (6 characters)
+ */
 const validationSchema = yup.object({
   firstName: yup
     .string()
@@ -24,6 +49,9 @@ const validationSchema = yup.object({
     .required('שדה חובה'),
 });
 
+/**
+ * Interface for registration form values
+ */
 interface RegisterFormValues {
   firstName: string;
   lastName: string;
@@ -31,6 +59,9 @@ interface RegisterFormValues {
   password: string;
 }
 
+/**
+ * Initial form values for registration
+ */
 const initialValues: RegisterFormValues = {
   firstName: '',
   lastName: '',
@@ -38,6 +69,14 @@ const initialValues: RegisterFormValues = {
   password: '',
 };
 
+/**
+ * Register Component Implementation
+ * 
+ * Handles user registration through a form interface
+ * Uses Material-UI components for styling and Formik for form management
+ * 
+ * @returns React component with registration form
+ */
 const Register: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();

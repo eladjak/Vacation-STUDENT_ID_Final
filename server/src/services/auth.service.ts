@@ -1,3 +1,18 @@
+/**
+ * Authentication Service
+ * 
+ * Handles all authentication-related business logic including
+ * user registration, login, token management, and password handling.
+ * Implements security best practices for user authentication.
+ * 
+ * Features:
+ * - Secure password hashing with bcrypt
+ * - JWT token generation and management
+ * - User data sanitization
+ * - Comprehensive error handling
+ * - Detailed logging
+ */
+
 import { Repository } from 'typeorm';
 import { User } from '../entities/User';
 import { AppDataSource } from '../config/data-source';
@@ -13,6 +28,21 @@ export class AuthService {
     this.userRepository = AppDataSource.getRepository(User);
   }
 
+  /**
+   * User Registration
+   * 
+   * Creates a new user account with hashed password.
+   * Generates JWT token for immediate authentication.
+   * 
+   * @param userData - User registration data
+   * @returns Object containing:
+   *   - user: Sanitized user object (no password)
+   *   - token: JWT authentication token
+   * 
+   * @throws AppError
+   *   - 400: Email already exists
+   *   - 500: Database/hashing error
+   */
   async register(userData: Partial<User>): Promise<{ user: User; token: string }> {
     const existingUser = await this.userRepository.findOne({
       where: { email: userData.email }
@@ -36,6 +66,22 @@ export class AuthService {
     return { user: userResponse, token };
   }
 
+  /**
+   * User Login
+   * 
+   * Authenticates user with email and password.
+   * Generates new JWT token upon successful authentication.
+   * 
+   * @param email - User's email address
+   * @param password - User's password (plain text)
+   * @returns Object containing:
+   *   - user: Sanitized user object (no password)
+   *   - token: JWT authentication token
+   * 
+   * @throws AppError
+   *   - 401: Invalid credentials
+   *   - 500: Server error
+   */
   async login(email: string, password: string): Promise<{ user: User; token: string }> {
     const user = await this.userRepository.findOne({
       where: { email }
@@ -66,6 +112,18 @@ export class AuthService {
     }
   }
 
+  /**
+   * JWT Token Generation
+   * 
+   * Creates a new JWT token containing user information.
+   * Uses environment variables for configuration.
+   * 
+   * @param user - User object to encode in token
+   * @returns JWT token string
+   * 
+   * @throws AppError
+   *   - 500: JWT secret not configured
+   */
   private generateToken(user: User): string {
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
@@ -80,11 +138,31 @@ export class AuthService {
     );
   }
 
+  /**
+   * User Data Sanitization
+   * 
+   * Removes sensitive information (password) from user object.
+   * 
+   * @param user - Complete user object
+   * @returns User object without password
+   */
   private sanitizeUser(user: User): User {
     const { password, ...userWithoutPassword } = user;
     return userWithoutPassword as User;
   }
 
+  /**
+   * Token Refresh
+   * 
+   * Generates a new JWT token for an existing user.
+   * Used to extend user session without re-authentication.
+   * 
+   * @param userId - ID of user requesting token refresh
+   * @returns New JWT token
+   * 
+   * @throws AppError
+   *   - 401: User not found
+   */
   async refreshToken(userId: number): Promise<string> {
     const user = await this.userRepository.findOne({
       where: { id: userId }

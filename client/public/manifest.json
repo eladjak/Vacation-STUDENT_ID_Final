@@ -1,20 +1,43 @@
 {
+  // Web App Manifest
+  //
+  // Progressive Web App configuration
+  // Features:
+  // - App name and description
+  // - Icons for different sizes
+  // - Theme colors
+  // - Display mode
+  // - Orientation
+  // - Scope and start URL
+  
   "short_name": "VacationVibe",
-  "name": "VacationVibe - Modern Vacation Management",
+  "name": "VacationVibe - חופשות מסביב לעולם",
+  "description": "מערכת מתקדמת לניהול והצגת חופשות",
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "64x64",
       "type": "image/x-icon"
     },
     {
-      "src": "logo.svg",
-      "type": "image/svg+xml",
-      "sizes": "192x192 512x512"
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "orientation": "portrait",
+  "theme_color": "#2196f3",
+  "background_color": "#ffffff",
+  "dir": "rtl",
+  "lang": "he",
+  "prefer_related_applications": false
 } 

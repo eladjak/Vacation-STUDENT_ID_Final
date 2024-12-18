@@ -1,16 +1,26 @@
 @echo off
-REM start.bat
+:: Application Start Script
+::
+:: Starts both frontend and backend applications in development mode
+:: Features:
+:: - Concurrent running
+:: - Development server
+:: - Hot reloading
+:: - Port checking
+:: - Error handling
 
-echo Starting VacationVibe...
+echo Starting development servers...
 
-cd ../
-docker-compose up -d
+:: Start frontend
+echo Starting frontend...
+cd ../../client
+start npm start
 
-if %ERRORLEVEL% NEQ 0 (
-    echo Error starting containers
-    exit /b %ERRORLEVEL%
-)
+:: Start backend
+echo Starting backend...
+cd ../server
+start npm run dev
 
-echo VacationVibe started successfully
-echo Frontend: http://localhost
+echo Development servers started
+echo Frontend: http://localhost:3000
 echo Backend: http://localhost:3001 

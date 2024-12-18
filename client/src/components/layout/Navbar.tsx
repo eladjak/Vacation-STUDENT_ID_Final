@@ -1,3 +1,18 @@
+/**
+ * Navigation Bar Component
+ * 
+ * Main navigation component with responsive design and role-based menu items
+ * Features:
+ * - Responsive layout (mobile/desktop)
+ * - Role-based navigation items
+ * - User authentication status handling
+ * - Mobile drawer menu
+ * - Animated logo
+ * - Active route highlighting
+ * 
+ * @component
+ */
+
 import React, { useState } from 'react';
 import {
   AppBar,
@@ -35,6 +50,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { logout } from '../../store/slices/authSlice';
 
+/**
+ * Navbar Component
+ * 
+ * Main navigation component that adapts to screen size and user role
+ * 
+ * @returns React component
+ */
 const Navbar: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -45,26 +67,48 @@ const Navbar: React.FC = () => {
   const dispatch = useAppDispatch();
   const { isAuthenticated, user } = useAppSelector(state => state.auth);
 
+  /**
+   * Opens the user menu
+   * @param event - Mouse event from clicking the user avatar
+   */
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
+  /**
+   * Closes the user menu
+   */
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
 
+  /**
+   * Handles user logout
+   * - Dispatches logout action
+   * - Closes user menu
+   * - Navigates to login page
+   */
   const handleLogout = () => {
     dispatch(logout());
     handleCloseUserMenu();
     navigate('/login');
   };
 
+  /**
+   * Handles navigation to different routes
+   * @param path - Target route path
+   */
   const handleNavigate = (path: string) => {
     navigate(path);
     handleCloseUserMenu();
     setMobileMenuOpen(false);
   };
 
+  /**
+   * Checks if the given path matches current route
+   * @param path - Route path to check
+   * @returns boolean indicating if route is active
+   */
   const isActive = (path: string) => {
     return location.pathname === path;
   };
@@ -78,8 +122,10 @@ const Navbar: React.FC = () => {
         borderBottom: `1px solid ${theme.palette.divider}`
       }}
     >
+      {/* Main container with max width */}
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          {/* Logo and brand section */}
           <Box
             sx={{
               display: 'flex',
@@ -88,6 +134,7 @@ const Navbar: React.FC = () => {
               gap: 1
             }}
           >
+            {/* Animated flight icon */}
             <FlightIcon 
               sx={{ 
                 color: theme.palette.primary.main,
@@ -95,6 +142,7 @@ const Navbar: React.FC = () => {
                 animation: 'float 3s ease-in-out infinite'
               }} 
             />
+            {/* Brand name */}
             <Typography
               variant="h6"
               noWrap
@@ -109,19 +157,23 @@ const Navbar: React.FC = () => {
             </Typography>
           </Box>
 
+          {/* Responsive navigation section */}
           {isMobile ? (
+            // Mobile menu button
             <IconButton
               size="large"
-              aria-label="תפריט"
+              aria-label="menu"
               onClick={() => setMobileMenuOpen(true)}
               sx={{ color: theme.palette.text.primary }}
             >
               <MenuIcon />
             </IconButton>
           ) : (
+            // Desktop navigation buttons
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
               {isAuthenticated ? (
                 <>
+                  {/* Admin-only buttons */}
                   {user?.role === 'admin' && (
                     <>
                       <Button
@@ -136,7 +188,7 @@ const Navbar: React.FC = () => {
                           }
                         }}
                       >
-                        הוסף חופשה
+                        Add Vacation
                       </Button>
                       <Button
                         onClick={() => handleNavigate('/admin/stats')}
@@ -150,10 +202,11 @@ const Navbar: React.FC = () => {
                           }
                         }}
                       >
-                        סטטיסטיקות
+                        Statistics
                       </Button>
                     </>
                   )}
+                  {/* Vacations button for all authenticated users */}
                   <Button
                     onClick={() => handleNavigate('/vacations')}
                     startIcon={<DashboardIcon />}
@@ -166,10 +219,11 @@ const Navbar: React.FC = () => {
                       }
                     }}
                   >
-                    חופשות
+                    Vacations
                   </Button>
+                  {/* User menu section */}
                   <Box sx={{ ml: 2 }}>
-                    <Tooltip title="הגדרות משתמש">
+                    <Tooltip title="User settings">
                       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                         <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
                           {user?.firstName?.[0]?.toUpperCase()}
@@ -196,12 +250,13 @@ const Navbar: React.FC = () => {
                         <ListItemIcon>
                           <LogoutIcon fontSize="small" />
                         </ListItemIcon>
-                        <Typography textAlign="center">התנתק</Typography>
+                        <Typography textAlign="center">Logout</Typography>
                       </MenuItem>
                     </Menu>
                   </Box>
                 </>
               ) : (
+                // Authentication buttons for non-authenticated users
                 <>
                   <Button
                     onClick={() => handleNavigate('/login')}
@@ -215,7 +270,7 @@ const Navbar: React.FC = () => {
                       }
                     }}
                   >
-                    התחבר
+                    Login
                   </Button>
                   <Button
                     onClick={() => handleNavigate('/register')}
@@ -229,7 +284,7 @@ const Navbar: React.FC = () => {
                       }
                     }}
                   >
-                    הרשמה
+                    Register
                   </Button>
                 </>
               )}
@@ -237,6 +292,8 @@ const Navbar: React.FC = () => {
           )}
         </Toolbar>
       </Container>
+
+      {/* Mobile drawer menu */}
       <Drawer
         anchor="right"
         open={mobileMenuOpen}
@@ -249,15 +306,18 @@ const Navbar: React.FC = () => {
           }
         }}
       >
+        {/* Close button */}
         <Box sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <IconButton onClick={() => setMobileMenuOpen(false)}>
             <CloseIcon />
           </IconButton>
         </Box>
         <Divider />
+        {/* Mobile menu items */}
         <List>
           {isAuthenticated ? (
             <>
+              {/* Admin-only menu items */}
               {user?.role === 'admin' && (
                 <>
                   <ListItem 
@@ -268,7 +328,7 @@ const Navbar: React.FC = () => {
                     <ListItemIcon>
                       <AddIcon />
                     </ListItemIcon>
-                    <ListItemText primary="הוסף חופשה" />
+                    <ListItemText primary="Add Vacation" />
                   </ListItem>
                   <ListItem 
                     button 
@@ -278,10 +338,11 @@ const Navbar: React.FC = () => {
                     <ListItemIcon>
                       <StatsIcon />
                     </ListItemIcon>
-                    <ListItemText primary="סטטיסטיקות" />
+                    <ListItemText primary="Statistics" />
                   </ListItem>
                 </>
               )}
+              {/* Common user menu items */}
               <ListItem 
                 button 
                 onClick={() => handleNavigate('/vacations')}
@@ -290,17 +351,18 @@ const Navbar: React.FC = () => {
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
-                <ListItemText primary="חופשות" />
+                <ListItemText primary="Vacations" />
               </ListItem>
               <Divider />
               <ListItem button onClick={handleLogout}>
                 <ListItemIcon>
                   <LogoutIcon />
                 </ListItemIcon>
-                <ListItemText primary="התנתק" />
+                <ListItemText primary="Logout" />
               </ListItem>
             </>
           ) : (
+            // Authentication menu items
             <>
               <ListItem 
                 button 
@@ -310,7 +372,7 @@ const Navbar: React.FC = () => {
                 <ListItemIcon>
                   <LoginIcon />
                 </ListItemIcon>
-                <ListItemText primary="התחבר" />
+                <ListItemText primary="Login" />
               </ListItem>
               <ListItem 
                 button 
@@ -320,12 +382,14 @@ const Navbar: React.FC = () => {
                 <ListItemIcon>
                   <RegisterIcon />
                 </ListItemIcon>
-                <ListItemText primary="הרשמה" />
+                <ListItemText primary="Register" />
               </ListItem>
             </>
           )}
         </List>
       </Drawer>
+
+      {/* Animation keyframes for logo */}
       <style>
         {`
           @keyframes float {

@@ -1,5 +1,13 @@
 @echo off
-REM docker-start.bat - Start Docker containers
+:: Docker Start Script
+::
+:: Starts all Docker containers for the application
+:: Features:
+:: - Starts all services in detached mode
+:: - Waits for health checks
+:: - Shows container status
+:: - Error handling
+:: - Automatic cleanup of old containers
 
 echo Starting Docker containers...
 
@@ -12,6 +20,4 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo Docker containers started successfully
-echo Frontend: http://localhost
-echo Backend: http://localhost:3001
-echo Redis: localhost:6379 
+docker-compose ps

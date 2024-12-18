@@ -1,3 +1,23 @@
+/**
+ * EditVacation Component
+ * 
+ * Admin component for editing existing vacation packages
+ * Features:
+ * - Pre-filled form with existing vacation data
+ * - Image upload with preview and current image display
+ * - Date range selection with validation
+ * - Price input with validation
+ * - Rich text description editor
+ * - Form validation
+ * - Error handling
+ * - Loading state indication
+ * - Responsive design
+ * - RTL support
+ * - Optimistic updates
+ * 
+ * @component
+ */
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams, useBlocker } from 'react-router-dom';
 import { useFormik, FormikHelpers } from 'formik';
@@ -40,6 +60,27 @@ const MIN_VACATION_DAYS = 2;
 const MAX_VACATION_DAYS = 30;
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
+/**
+ * Interface for vacation form values in edit mode
+ */
+interface EditVacationFormValues {
+  destination: string;
+  description: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  price: number;
+  image: File | null;
+}
+
+/**
+ * Validation schema for vacation editing
+ * Validates:
+ * - Required destination
+ * - Required description
+ * - Valid date range
+ * - Positive price value
+ * - Optional image upload with size and format restrictions
+ */
 const validationSchema = yup.object({
   destination: yup
     .string()
@@ -95,6 +136,14 @@ const RequiredLabel: React.FC<{ text: string }> = ({ text }) => (
   </Box>
 );
 
+/**
+ * EditVacation Component Implementation
+ * 
+ * Provides an interface for administrators to modify existing vacation packages
+ * Uses Material-UI components for styling and form management
+ * 
+ * @returns React component with vacation editing form
+ */
 const EditVacation: React.FC = (): React.ReactElement => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -110,7 +159,7 @@ const EditVacation: React.FC = (): React.ReactElement => {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout>();
   const lastAutoSaveRef = useRef<number>(0);
-  const [initialFormValues, setInitialFormValues] = useState<VacationFormValues>({
+  const [initialFormValues, setInitialFormValues] = useState<EditVacationFormValues>({
     destination: '',
     description: '',
     startDate: null,
@@ -140,7 +189,7 @@ const EditVacation: React.FC = (): React.ReactElement => {
     }
   }, [navigate]);
 
-  const handleSubmit = useCallback(async (values: VacationFormValues, formikHelpers: FormikHelpers<VacationFormValues>): Promise<void> => {
+  const handleSubmit = useCallback(async (values: EditVacationFormValues, formikHelpers: FormikHelpers<EditVacationFormValues>): Promise<void> => {
     try {
       setSubmitting(true);
       setError(null);
@@ -176,7 +225,7 @@ const EditVacation: React.FC = (): React.ReactElement => {
     }
   }, [id, navigate, isAutoSaving, handleError]);
 
-  const formik = useFormik<VacationFormValues>({
+  const formik = useFormik<EditVacationFormValues>({
     initialValues: initialFormValues,
     validationSchema,
     onSubmit: handleSubmit,

@@ -1,10 +1,40 @@
+/**
+ * Initial Database Schema Migration
+ * 
+ * Creates the initial database structure for the vacation tracking system.
+ * Establishes tables for users, vacations, and vacation follows with appropriate relationships.
+ * 
+ * Tables Created:
+ * 1. users - User account information
+ * 2. vacations - Vacation package details
+ * 3. vacation_follows - User-vacation follow relationships
+ * 
+ * Features:
+ * - Automatic timestamps
+ * - Foreign key constraints
+ * - Unique constraints
+ * - Appropriate indexes
+ * - Cascade delete rules
+ */
+
 import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class CreateInitialTables1701454800000 implements MigrationInterface {
     name = 'CreateInitialTables1701454800000'
 
+    /**
+     * Migration Up Method
+     * 
+     * Creates the initial database schema:
+     * 1. Creates users table with role-based access
+     * 2. Creates vacations table with all necessary fields
+     * 3. Creates vacation_follows junction table
+     * 4. Adds necessary indexes for performance
+     * 
+     * @param queryRunner - TypeORM query runner instance
+     */
     public async up(queryRunner: QueryRunner): Promise<void> {
-        // Create users table
+        // Create users table with role-based access control
         await queryRunner.query(`
             CREATE TABLE users (
                 id INT NOT NULL AUTO_INCREMENT,
@@ -19,7 +49,7 @@ export class CreateInitialTables1701454800000 implements MigrationInterface {
             ) ENGINE=InnoDB
         `);
 
-        // Create vacations table
+        // Create vacations table with comprehensive vacation details
         await queryRunner.query(`
             CREATE TABLE vacations (
                 id INT NOT NULL AUTO_INCREMENT,
@@ -36,7 +66,7 @@ export class CreateInitialTables1701454800000 implements MigrationInterface {
             ) ENGINE=InnoDB
         `);
 
-        // Create vacation_follows table
+        // Create junction table for user-vacation follows with unique constraint
         await queryRunner.query(`
             CREATE TABLE vacation_follows (
                 id INT NOT NULL AUTO_INCREMENT,
@@ -50,14 +80,22 @@ export class CreateInitialTables1701454800000 implements MigrationInterface {
             ) ENGINE=InnoDB
         `);
 
-        // Add indexes
+        // Add performance optimization indexes
         await queryRunner.query(`CREATE INDEX IDX_users_email ON users(email)`);
         await queryRunner.query(`CREATE INDEX IDX_vacations_startDate ON vacations(startDate)`);
         await queryRunner.query(`CREATE INDEX IDX_vacations_endDate ON vacations(endDate)`);
     }
 
+    /**
+     * Migration Down Method
+     * 
+     * Removes all created tables in the correct order to maintain referential integrity.
+     * Order: vacation_follows -> vacations -> users
+     * 
+     * @param queryRunner - TypeORM query runner instance
+     */
     public async down(queryRunner: QueryRunner): Promise<void> {
-        // Drop tables in reverse order
+        // Drop tables in reverse order to respect foreign key constraints
         await queryRunner.query(`DROP TABLE IF EXISTS vacation_follows`);
         await queryRunner.query(`DROP TABLE IF EXISTS vacations`);
         await queryRunner.query(`DROP TABLE IF EXISTS users`);

@@ -1,3 +1,21 @@
+/**
+ * VacationList Component
+ * 
+ * Container component for displaying a grid of vacation cards
+ * Features:
+ * - Responsive grid layout
+ * - Infinite scroll pagination
+ * - Loading states
+ * - Error handling
+ * - Empty state handling
+ * - Filter controls
+ * - Sort options
+ * - RTL support
+ * - Accessibility support
+ * 
+ * @component
+ */
+
 import React, { useEffect, useState } from 'react';
 import { 
   Container, 
@@ -13,6 +31,21 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { fetchVacations, deleteVacation } from '../../store/slices/vacationSlice';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * Interface for vacation list props
+ */
+interface VacationListProps {
+  // ... existing code ...
+}
+
+/**
+ * VacationList Component Implementation
+ * 
+ * Manages the display and organization of vacation cards
+ * Uses Material-UI Grid for responsive layout
+ * 
+ * @returns React component with vacation grid
+ */
 const VacationList: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();

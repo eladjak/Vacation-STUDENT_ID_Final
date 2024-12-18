@@ -1,5 +1,12 @@
 @echo off
-REM docker-stop.bat - Stop Docker containers
+:: Docker Stop Script
+::
+:: Stops all Docker containers gracefully
+:: Features:
+:: - Graceful shutdown
+:: - Timeout handling
+:: - Container status check
+:: - Error handling
 
 echo Stopping Docker containers...
 

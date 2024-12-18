@@ -1,55 +1,51 @@
 @echo off
-echo Starting Docker deployment...
+:: Docker Restart Script
+::
+:: Restarts all Docker containers with optional rebuild
+:: Features:
+:: - Graceful shutdown
+:: - Optional rebuild
+:: - Health check waiting
+:: - Container status verification
+:: - Error handling
+:: - Progress display
 
-REM Check Docker
-docker info > nul 2>&1
-if errorlevel 1 (
-    echo Docker is not running! Please start Docker Desktop.
-    pause
-    exit /b 1
+echo Restarting Docker containers...
+
+:: Stop containers
+echo Stopping containers...
+call docker-stop.bat
+if %ERRORLEVEL% NEQ 0 (
+    echo Error stopping containers
+    exit /b %ERRORLEVEL%
 )
 
-REM Check XAMPP
-netstat -ano | findstr ":3306" > nul
-if not errorlevel 1 (
-    echo Port 3306 is in use! Please close XAMPP/MySQL.
-    pause
-    exit /b 1
+:: Optional rebuild
+set /p REBUILD="Rebuild images? (y/n): "
+if /i "%REBUILD%"=="y" (
+    echo Rebuilding images...
+    call docker-build.bat
+    if %ERRORLEVEL% NEQ 0 (
+        echo Error rebuilding images
+        exit /b %ERRORLEVEL%
+    )
 )
 
-echo.
-echo [1/4] Stopping containers...
-docker-compose -f ../docker-compose.yml down
-if errorlevel 1 goto error
+:: Start containers
+echo Starting containers...
+call docker-start.bat
+if %ERRORLEVEL% NEQ 0 (
+    echo Error starting containers
+    exit /b %ERRORLEVEL%
+)
 
-echo.
-echo [2/4] Cleaning system...
-docker system prune -af --volumes
-if errorlevel 1 goto error
+:: Verify status
+echo Verifying container status...
+cd ../
+docker-compose ps
 
-echo.
-echo [3/4] Building images...
-docker-compose -f ../docker-compose.yml build
-if errorlevel 1 goto error
-
-echo.
-echo [4/4] Starting services...
-docker-compose -f ../docker-compose.yml up -d
-if errorlevel 1 goto error
-
-echo.
-echo Deployment successful!
-echo.
+echo Restart completed successfully
 echo Frontend: http://localhost
 echo Backend: http://localhost:3001
-echo.
-echo Starting logs (Ctrl+C to exit)...
-timeout /t 5
-docker-compose -f ../docker-compose.yml logs -f
-exit /b 0
-
-:error
-echo.
-echo Deployment failed!
-pause
-exit /b 1
+echo Database: localhost:3306
+echo Redis: localhost:6379

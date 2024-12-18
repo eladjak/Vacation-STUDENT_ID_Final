@@ -1,3 +1,17 @@
+/**
+ * Database Seeding Script
+ * 
+ * Initializes the database with sample data for development and testing.
+ * Creates default users, sample vacations, and example relationships.
+ * 
+ * Features:
+ * - Database schema recreation
+ * - Default user accounts creation
+ * - Sample vacation data
+ * - Example user-vacation relationships
+ * - Detailed logging
+ */
+
 import { AppDataSource } from './data-source';
 import { User } from '../entities/user.entity';
 import { Vacation } from '../entities/vacation.entity';
@@ -6,6 +20,12 @@ import bcrypt from 'bcryptjs';
 import { Logger } from 'winston';
 import { createLogger, format, transports } from 'winston';
 
+/**
+ * Logger Configuration
+ * 
+ * Sets up Winston logger for detailed seed operation logging
+ * with timestamp and JSON formatting.
+ */
 const logger = createLogger({
   format: format.combine(
     format.timestamp(),
@@ -14,20 +34,36 @@ const logger = createLogger({
   transports: [new transports.Console()]
 });
 
+/**
+ * Database Seeding Function
+ * 
+ * Performs the complete database seeding process:
+ * 1. Initializes database connection
+ * 2. Recreates database schema
+ * 3. Creates default users (admin and regular)
+ * 4. Creates sample vacations
+ * 5. Sets up example relationships
+ * 
+ * Default Users Created:
+ * - Admin: admin@test.com / 123456
+ * - User: user@test.com / 123456
+ * 
+ * @throws Error if any seeding operation fails
+ */
 async function seed() {
   try {
-    // Initialize database connection
+    // Initialize database connection if needed
     if (!AppDataSource.isInitialized) {
       await AppDataSource.initialize();
     }
     logger.info('Database connection initialized');
 
-    // Drop all tables and recreate them
+    // Clean database and recreate schema
     logger.info('Recreating database schema...');
     await AppDataSource.synchronize(true);
     logger.info('Database schema recreated');
 
-    // Create admin user
+    // Create administrator account
     const hashedPassword = await bcrypt.hash('123456', 10);
     const admin = AppDataSource.getRepository(User).create({
       firstName: 'Admin',
@@ -39,7 +75,7 @@ async function seed() {
     await AppDataSource.getRepository(User).save(admin);
     logger.info('Admin user created');
 
-    // Create regular user
+    // Create standard user account
     const user = AppDataSource.getRepository(User).create({
       firstName: 'Regular',
       lastName: 'User',
@@ -50,7 +86,7 @@ async function seed() {
     await AppDataSource.getRepository(User).save(user);
     logger.info('Regular user created');
 
-    // Create sample vacations
+    // Define sample vacation packages
     const vacations = [
       {
         destination: 'פריז, צרפת',
@@ -78,6 +114,7 @@ async function seed() {
       }
     ];
 
+    // Create vacation records
     const savedVacations = [];
     for (const vacationData of vacations) {
       const vacation = AppDataSource.getRepository(Vacation).create(vacationData);
@@ -86,7 +123,7 @@ async function seed() {
     }
     logger.info('Sample vacations created');
 
-    // Add some follows
+    // Create example follow relationship
     const firstVacation = savedVacations[0];
     const follow = AppDataSource.getRepository(VacationFollow).create({
       user,
@@ -103,4 +140,5 @@ async function seed() {
   }
 }
 
+// Execute seeding process
 seed(); 

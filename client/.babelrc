@@ -1,13 +1,32 @@
 {
+  // Babel Configuration
+  //
+  // Configures JavaScript/TypeScript transpilation
+  // Features:
+  // - Modern JavaScript (ES6+)
+  // - React JSX
+  // - TypeScript
+  // - Async/await
+  // - Private class fields
+  
   "presets": [
+    // Transform modern JavaScript features
     "@babel/preset-env",
+    
+    // Transform React JSX with automatic runtime
     ["@babel/preset-react", {
       "runtime": "automatic"
     }],
+    
+    // Transform TypeScript
     "@babel/preset-typescript"
   ],
+  
   "plugins": [
+    // Support for async/await and other runtime features
     "@babel/plugin-transform-runtime",
+    
+    // Support for private class fields (#)
     "@babel/plugin-transform-private-property-in-object"
   ]
 } 

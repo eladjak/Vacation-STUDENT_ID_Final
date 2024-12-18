@@ -1,3 +1,20 @@
+/**
+ * Login Component
+ * 
+ * A comprehensive login form component with validation and error handling
+ * Features:
+ * - Email and password validation
+ * - Show/hide password toggle
+ * - Error messages in Hebrew
+ * - Loading state indication
+ * - Responsive design
+ * - Automatic navigation after successful login
+ * - Form field tooltips
+ * - RTL support
+ * 
+ * @component
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -19,6 +36,12 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { loginStart, loginSuccess, loginFailure } from '../../store/slices/authSlice';
 import { authService } from '../../services/auth.service';
 
+/**
+ * Validation schema for login form
+ * Validates:
+ * - Email format
+ * - Password minimum length (6 characters)
+ */
 const validationSchema = yup.object({
   email: yup
     .string()
@@ -30,16 +53,30 @@ const validationSchema = yup.object({
     .required('שדה חובה'),
 });
 
+/**
+ * Interface for login form values
+ */
 interface LoginFormValues {
   email: string;
   password: string;
 }
 
+/**
+ * Initial form values
+ */
 const initialValues: LoginFormValues = {
   email: '',
   password: '',
 };
 
+/**
+ * Login Component Implementation
+ * 
+ * Handles user authentication through a form interface
+ * Uses Material-UI components for styling and Redux for state management
+ * 
+ * @returns React component with login form
+ */
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();

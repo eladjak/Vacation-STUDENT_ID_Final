@@ -1,3 +1,19 @@
+/**
+ * Application Configuration Module
+ * 
+ * This module sets up the Express application with all necessary middleware,
+ * security configurations, and route handlers. It provides a robust foundation
+ * for the Vacation Management System's server-side operations.
+ * 
+ * Key Features:
+ * - Security middleware (Helmet)
+ * - CORS configuration
+ * - Request parsing and compression
+ * - Static file serving
+ * - Logging
+ * - Error handling
+ */
+
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -12,7 +28,12 @@ import { auth } from './middleware/auth';
 
 const app = express();
 
-// Create required directories
+/**
+ * Directory Setup
+ * Creates necessary directories for file uploads if they don't exist
+ * - uploads/: Main uploads directory
+ * - uploads/vacations/: Directory for vacation-related images
+ */
 const uploadsDir = path.join(__dirname, '..', 'uploads');
 const vacationsUploadsDir = path.join(uploadsDir, 'vacations');
 
@@ -23,10 +44,20 @@ if (!require('fs').existsSync(vacationsUploadsDir)) {
   require('fs').mkdirSync(vacationsUploadsDir);
 }
 
-// Security middleware
+/**
+ * Security Configuration
+ * Helmet helps secure Express apps by setting various HTTP headers
+ */
 app.use(helmet());
 
-// CORS configuration
+/**
+ * CORS Configuration
+ * Enables Cross-Origin Resource Sharing with specific options:
+ * - Allows requests only from the configured client URL
+ * - Supports credentials
+ * - Permits specific HTTP methods
+ * - Allows necessary headers
+ */
 app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:3000',
   credentials: true,
@@ -34,19 +65,35 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Request parsing
+/**
+ * Request Body Parsing
+ * Configures Express to parse:
+ * - JSON payloads
+ * - URL-encoded bodies (extended mode for nested objects)
+ */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Compression
+/**
+ * Response Compression
+ * Compresses response bodies for all requests
+ */
 app.use(compression());
 
-// Logging
+/**
+ * Request Logging
+ * Morgan logger for development environment
+ * Disabled during testing to keep test output clean
+ */
 if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('dev'));
 }
 
-// Allow cross-origin for static files
+/**
+ * Cross-Origin Resource Configuration
+ * Additional headers to ensure proper resource sharing,
+ * particularly important for static files
+ */
 app.use((req, res, next) => {
   res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -55,7 +102,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Static files
+/**
+ * Static File Serving Configuration
+ * Serves files from the uploads directory with:
+ * - CORS headers
+ * - Cache control for better performance
+ * - Cross-origin resource policy
+ */
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads'), {
   setHeaders: (res) => {
     res.set('Access-Control-Allow-Origin', '*');
@@ -65,13 +118,21 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads'), {
   }
 }));
 
-// Initialize routes after database connection
+/**
+ * Routes Initialization Function
+ * Sets up API endpoints with their respective middleware:
+ * - Authentication routes (public)
+ * - Vacation routes (protected by auth middleware)
+ */
 const initializeRoutes = () => {
   app.use('/api/v1/auth', authRoutes);
   app.use('/api/v1/vacations', auth, vacationRoutes);
 };
 
-// Error handling
+/**
+ * Global Error Handler
+ * Catches and processes all errors thrown in the application
+ */
 app.use(errorHandler);
 
 // Export app and initialization function

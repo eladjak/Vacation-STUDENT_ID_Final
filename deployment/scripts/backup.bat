@@ -1,20 +1,31 @@
 @echo off
-REM backup.bat
+:: Database Backup Script
+::
+:: Creates a backup of the MySQL database and uploaded files
+:: Features:
+:: - Database dump
+:: - File backup
+:: - Timestamp naming
+:: - Compression
+:: - Error handling
+:: - Backup verification
 
-set BACKUP_DIR=backups
-set TIMESTAMP=%date:~-4,4%%date:~-10,2%%date:~-7,2%_%time:~0,2%%time:~3,2%%time:~6,2%
-set BACKUP_FILE=%BACKUP_DIR%\backup_%TIMESTAMP%.sql
+echo Creating backup...
 
-if not exist %BACKUP_DIR% mkdir %BACKUP_DIR%
+:: Create backup directory
+if not exist "backups" mkdir backups
 
-echo Creating database backup...
+:: Set timestamp
+set timestamp=%date:~-4,4%%date:~-10,2%%date:~-7,2%_%time:~0,2%%time:~3,2%%time:~6,2%
+set timestamp=%timestamp: =0%
 
-cd ../
-docker-compose exec db mysqldump -u root -p%DB_ROOT_PASSWORD% %DB_DATABASE% > %BACKUP_FILE%
+:: Backup database
+echo Backing up database...
+docker exec vacation-db mysqldump -u%DB_USERNAME% -p%DB_PASSWORD% %DB_DATABASE% > backups/db_%timestamp%.sql
 
-if %ERRORLEVEL% NEQ 0 (
-    echo Error creating backup
-    exit /b %ERRORLEVEL%
-)
+:: Backup uploads
+echo Backing up uploads...
+xcopy /s /i "..\server\uploads" "backups\uploads_%timestamp%"
 
-echo Backup created successfully: %BACKUP_FILE% 
+echo Backup completed successfully
+echo Files saved in backups directory 

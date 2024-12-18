@@ -1,9 +1,33 @@
+/**
+ * Main Layout Components
+ * 
+ * Contains the main layout structure and footer component
+ * Features:
+ * - Responsive layout
+ * - Error handling with snackbar
+ * - Sticky footer
+ * - Social media links
+ * - Contact information
+ */
+
 import React from 'react';
 import { Container, Box, Alert, Snackbar, Paper, Typography, IconButton, useTheme } from '@mui/material';
 import { useAppSelector } from '../../hooks/redux';
 import Navbar from './Navbar';
 import { GitHub, LinkedIn, Email, Phone, Code } from '@mui/icons-material';
 
+/**
+ * Footer Component
+ * 
+ * Displays copyright information and social media links
+ * Features:
+ * - Responsive design
+ * - Animated social icons
+ * - Contact links
+ * - Project repository link
+ * 
+ * @returns React component
+ */
 const Footer: React.FC = () => {
   const theme = useTheme();
 
@@ -32,6 +56,7 @@ const Footer: React.FC = () => {
             gap: { xs: 2, sm: 3 }
           }}
         >
+          {/* Copyright text */}
           <Typography 
             variant="body2" 
             color="text.secondary"
@@ -41,9 +66,10 @@ const Footer: React.FC = () => {
               fontSize: { xs: '0.875rem', sm: '1rem' }
             }}
           >
-            © {new Date().getFullYear()} נבנה על ידי אלעד יעקובוביץ׳
+            © {new Date().getFullYear()} Built by Elad Yaakobovitch
           </Typography>
           
+          {/* Social media links */}
           <Box 
             sx={{ 
               display: 'flex', 
@@ -53,6 +79,7 @@ const Footer: React.FC = () => {
               justifyContent: 'center'
             }}
           >
+            {/* GitHub link */}
             <IconButton
               href="https://github.com/eladjak"
               target="_blank"
@@ -69,6 +96,7 @@ const Footer: React.FC = () => {
             >
               <GitHub />
             </IconButton>
+            {/* LinkedIn link */}
             <IconButton
               href="https://linkedin.com/in/eladyaakobovitchcodingdeveloper"
               target="_blank"
@@ -85,6 +113,7 @@ const Footer: React.FC = () => {
             >
               <LinkedIn />
             </IconButton>
+            {/* Email link */}
             <IconButton
               href="mailto:eladhiteclearning@gmail.com"
               size={theme.breakpoints.down('sm') ? 'small' : 'medium'}
@@ -99,6 +128,7 @@ const Footer: React.FC = () => {
             >
               <Email />
             </IconButton>
+            {/* Phone link */}
             <IconButton
               href="tel:+972525427474"
               size={theme.breakpoints.down('sm') ? 'small' : 'medium'}
@@ -113,6 +143,7 @@ const Footer: React.FC = () => {
             >
               <Phone />
             </IconButton>
+            {/* Project repository link */}
             <IconButton
               href="https://github.com/eladjak/vacation-student-id-final"
               target="_blank"
@@ -136,7 +167,21 @@ const Footer: React.FC = () => {
   );
 };
 
+/**
+ * Layout Component
+ * 
+ * Main layout wrapper for the application
+ * Features:
+ * - Responsive container
+ * - Navigation bar
+ * - Error snackbar
+ * - Footer
+ * 
+ * @param props.children - Child components to render in the layout
+ * @returns React component
+ */
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Get error states from Redux store
   const { error: authError } = useAppSelector(state => state.auth);
   const { error: vacationsError } = useAppSelector(state => state.vacations);
 
@@ -150,10 +195,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       bgcolor: theme => theme.palette.background.default
     }}>
       <Navbar />
+      {/* Main content container */}
       <Container component="main" sx={{ mt: 4, mb: 4, flexGrow: 1 }}>
         {children}
       </Container>
       <Footer />
+      {/* Error snackbar */}
       <Snackbar 
         open={!!error} 
         autoHideDuration={6000} 

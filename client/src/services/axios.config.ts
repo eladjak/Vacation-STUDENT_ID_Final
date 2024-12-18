@@ -1,100 +1,129 @@
-import axios from 'axios';
+/**
+ * Axios Configuration
+ * 
+ * Configures and exports a customized Axios instance
+ * Features:
+ * - Base URL configuration
+ * - Request/response interceptors
+ * - Error handling
+ * - Token management
+ * - Request timeout
+ * - Response transformation
+ */
 
-const axiosInstance = axios.create({
-  baseURL: '/api/v1',
+import axios from 'axios';
+import { toast } from 'react-toastify';
+
+// Create custom axios instance
+const instance = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3001/api',
+  timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
+    'Content-Type': 'application/json'
   }
 });
 
-// Add a request interceptor
-axiosInstance.interceptors.request.use(
+// Request interceptor
+instance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-      console.log('Added token to request:', { 
+    // Add timestamp to prevent caching
+    config.params = {
+      ...config.params,
+      _t: Date.now()
+    };
+
+    // Log request details in development
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🚀 Request:', {
+        method: config.method?.toUpperCase(),
         url: config.url,
-        tokenPrefix: token.substring(0, 20) + '...'
+        data: config.data,
+        headers: config.headers
       });
-    } else {
-      console.log('No token found for request:', config.url);
     }
-    
-    // Don't add Content-Type for FormData
-    if (config.data instanceof FormData) {
-      delete config.headers['Content-Type'];
-    }
-    
+
     return config;
   },
   (error) => {
-    console.error('Request error:', error);
-    return Promise.reject(new Error('שגיאה בשליחת הבקשה'));
+    // Log request errors
+    console.error('❌ Request Error:', error);
+    return Promise.reject(error);
   }
 );
 
-// Add a response interceptor
-axiosInstance.interceptors.response.use(
+// Response interceptor
+instance.interceptors.response.use(
   (response) => {
-    console.log('Response success:', { 
-      url: response.config.url, 
-      status: response.status
-    });
+    // Log response in development
+    if (process.env.NODE_ENV === 'development') {
+      console.log('✅ Response:', {
+        status: response.status,
+        data: response.data,
+        headers: response.headers
+      });
+    }
+
     return response;
   },
   (error) => {
-    console.error('Response error:', {
-      url: error.config?.url,
-      status: error.response?.status,
-      message: error.response?.data?.message
-    });
-    
-    // Handle network errors
-    if (!error.response) {
-      return Promise.reject(new Error('שגיאת רשת. אנא בדוק את החיבור שלך.'));
-    }
+    // Handle response errors
+    if (error.response) {
+      // Server responded with error status
+      const { status, data } = error.response;
 
-    // Handle 401 Unauthorized
-    if (error.response.status === 401) {
-      const currentPath = window.location.pathname;
-      // Only clear token and redirect if we're not already on the login page
-      // and not trying to login
-      if (currentPath !== '/login' && !error.config.url?.includes('/auth/login')) {
-        console.log('Unauthorized access, clearing session...');
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.href = '/login';
+      switch (status) {
+        case 401:
+          // Unauthorized - clear auth state
+          toast.error('התחברות נדרשת');
+          // Trigger logout action here if needed
+          break;
+
+        case 403:
+          // Forbidden
+          toast.error('אין לך הרשאה לבצע פעולה זו');
+          break;
+
+        case 404:
+          // Not found
+          toast.error('המשאב המבוקש לא נמצא');
+          break;
+
+        case 422:
+          // Validation error
+          const validationErrors = data.errors;
+          if (validationErrors) {
+            Object.values(validationErrors).forEach((error: any) => {
+              toast.error(error as string);
+            });
+          } else {
+            toast.error('שגיאה בנתונים שהוזנו');
+          }
+          break;
+
+        case 500:
+          // Server error
+          toast.error('שגיאת שרת - נסה שוב מאוחר יותר');
+          break;
+
+        default:
+          // Other errors
+          toast.error('שגיאה לא צפויה - נסה שוב');
       }
-      return Promise.reject(new Error(error.response.data?.message || 'נדרשת התחברות מחדש'));
+    } else if (error.request) {
+      // Request made but no response
+      toast.error('לא ניתן להתחבר לשרת - בדוק את החיבור לאינטרנט');
+    } else {
+      // Request setup error
+      toast.error('שגיאה בהגדרת הבקשה');
     }
 
-    // Handle 403 Forbidden
-    if (error.response.status === 403) {
-      return Promise.reject(new Error('אין לך הרשאות לבצע פעולה זו.'));
+    // Log error details in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('❌ Response Error:', error);
     }
 
-    // Handle 404 Not Found
-    if (error.response.status === 404) {
-      return Promise.reject(new Error('הכתובת המבוקשת לא נמצאה. אנא נסה שוב.'));
-    }
-
-    // Handle validation errors
-    if (error.response.status === 400) {
-      const message = error.response.data?.message || 'נתונים לא תקינים';
-      return Promise.reject(new Error(message));
-    }
-
-    // Handle server errors
-    if (error.response.status >= 500) {
-      return Promise.reject(new Error('שגיאת שרת. אנא נסה שוב מאוחר יותר.'));
-    }
-
-    // Handle other errors
-    const message = error.response?.data?.message || 'שגיאה לא צפויה התרחשה.';
-    return Promise.reject(new Error(message));
+    return Promise.reject(error);
   }
 );
 
-export default axiosInstance; 
+export default instance; 

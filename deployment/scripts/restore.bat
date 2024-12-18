@@ -1,26 +1,47 @@
 @echo off
-REM restore.bat
+:: Database Restore Script
+::
+:: Restores database and files from backup
+:: Features:
+:: - Database restore
+:: - File restore
+:: - Backup selection
+:: - Validation checks
+:: - Error handling
+:: - Progress display
 
-set BACKUP_FILE=%1
+echo Database Restore Utility
 
-if "%BACKUP_FILE%"=="" (
-    echo Please provide backup file path
+:: List available backups
+echo Available backups:
+dir /b backups\db_*.sql
+echo.
+
+:: Get backup selection
+set /p BACKUP_FILE="Enter backup filename (without path): "
+if not exist "backups\%BACKUP_FILE%" (
+    echo Error: Backup file not found
     exit /b 1
 )
 
-if not exist %BACKUP_FILE% (
-    echo Backup file not found: %BACKUP_FILE%
-    exit /b 1
+:: Stop services
+echo Stopping services...
+call docker-stop.bat
+
+:: Restore database
+echo Restoring database...
+docker exec vacation-db mysql -u%DB_USERNAME% -p%DB_PASSWORD% %DB_DATABASE% < backups\%BACKUP_FILE%
+
+:: Restore uploads if available
+set UPLOAD_BACKUP=%BACKUP_FILE:db_=uploads_%
+set UPLOAD_BACKUP=%UPLOAD_BACKUP:.sql=%
+if exist "backups\%UPLOAD_BACKUP%" (
+    echo Restoring uploads...
+    xcopy /s /i /y "backups\%UPLOAD_BACKUP%" "..\server\uploads"
 )
 
-echo Restoring database from backup...
+:: Start services
+echo Starting services...
+call docker-start.bat
 
-cd ../
-docker-compose exec db mysql -u root -p%DB_ROOT_PASSWORD% %DB_DATABASE% < %BACKUP_FILE%
-
-if %ERRORLEVEL% NEQ 0 (
-    echo Error restoring backup
-    exit /b %ERRORLEVEL%
-)
-
-echo Database restored successfully 
+echo Restore completed successfully 

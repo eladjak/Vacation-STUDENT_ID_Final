@@ -1,3 +1,17 @@
+/**
+ * User Menu Component
+ * 
+ * Displays navigation options and actions for the logged-in user
+ * Features:
+ * - Dropdown menu with user options
+ * - Avatar with user's first name initial
+ * - Profile navigation
+ * - Admin panel access (admin only)
+ * - Logout button
+ * 
+ * @component
+ */
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,33 +31,63 @@ import {
 import { logout } from '../../store/slices/authSlice';
 import { RootState } from '../../store';
 
+/**
+ * Props interface for UserMenu component
+ */
 export interface UserMenuProps {}
 
+/**
+ * UserMenu Component
+ * 
+ * Displays user menu with navigation options and actions
+ * 
+ * @returns React component
+ */
 const UserMenu: React.FC<UserMenuProps> = () => {
+  // State for managing menu anchor element
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
 
+  /**
+   * Opens the menu
+   * @param event - Mouse event from clicking the avatar
+   */
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
+  /**
+   * Closes the menu
+   */
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  /**
+   * Handles user logout
+   * - Dispatches logout action
+   * - Closes menu
+   * - Navigates to login page
+   */
   const handleLogout = () => {
     dispatch(logout());
     handleClose();
     navigate('/login');
   };
 
+  /**
+   * Navigates to user profile page
+   */
   const handleProfile = () => {
     handleClose();
     navigate('/profile');
   };
 
+  /**
+   * Navigates to admin dashboard
+   */
   const handleAdmin = () => {
     handleClose();
     navigate('/admin');

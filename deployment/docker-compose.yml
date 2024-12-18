@@ -1,52 +1,65 @@
+# Docker Compose Configuration
+#
+# Defines the multi-container application setup for VacationVibe
+# Features:
+# - Frontend (React + Nginx)
+# - Backend (Node.js + Express)
+# - Database (MySQL)
+# - Cache (Redis)
+# - Volume persistence
+# - Network isolation
+# - Health checks
+# - Resource limits
+
 version: '3.8'
 
 services:
+  # Frontend service: React application served by Nginx
   frontend:
     build:
-      context: ../client
-      dockerfile: ../deployment/docker/frontend/Dockerfile
+      context: ..
+      dockerfile: deployment/docker/frontend/Dockerfile
     ports:
       - "80:80"
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
     networks:
       - app-network
+    restart: unless-stopped
 
+  # Backend service: Node.js API server
   backend:
     build:
-      context: ../server
-      dockerfile: ../deployment/docker/backend/Dockerfile
+      context: ..
+      dockerfile: deployment/docker/backend/Dockerfile
     ports:
       - "3001:3001"
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+    env_file:
+      - .env
     environment:
-      - NODE_ENV=production
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_DATABASE=${DB_DATABASE}
-      - JWT_SECRET=${JWT_SECRET}
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - DB_HOST=database
+      - REDIS_HOST=cache
+    depends_on:
+      - database
+      - cache
+    volumes:
+      - uploads:/app/uploads
     networks:
       - app-network
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
 
-  db:
-    image: mysql:8
+  # Database service: MySQL
+  database:
+    image: mysql:8.0
     ports:
-      - "3307:3306"
+      - "3306:3306"
+    env_file:
+      - .env
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - MYSQL_DATABASE=${DB_DATABASE}
@@ -56,33 +69,40 @@ services:
       - db-data:/var/lib/mysql
     networks:
       - app-network
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-  redis:
+  # Cache service: Redis
+  cache:
     image: redis:alpine
     ports:
       - "6379:6379"
     volumes:
       - redis-data:/data
-    command: redis-server --appendonly yes
     networks:
       - app-network
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
+# Persistent volumes configuration
+volumes:
+  uploads:
+    name: vacation-uploads
+  db-data:
+    name: vacation-db-data
+  redis-data:
+    name: vacation-redis-data
+
+# Network configuration
 networks:
   app-network:
+    name: vacation-network
     driver: bridge
-
-volumes:
-  db-data:
-  redis-data: 

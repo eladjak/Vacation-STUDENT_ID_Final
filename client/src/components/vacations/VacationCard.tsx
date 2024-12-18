@@ -1,3 +1,22 @@
+/**
+ * VacationCard Component
+ * 
+ * Card component for displaying individual vacation packages
+ * Features:
+ * - Responsive image display
+ * - Price and date information
+ * - Follow/unfollow functionality
+ * - Admin edit/delete controls
+ * - Like counter
+ * - Hover effects
+ * - Loading states
+ * - Error handling
+ * - RTL support
+ * - Accessibility support
+ * 
+ * @component
+ */
+
 import React, { useState } from 'react';
 import {
   Card,
@@ -25,12 +44,24 @@ import { Vacation } from '../../types';
 import { useAppDispatch } from '../../hooks/redux';
 import { followVacation, unfollowVacation } from '../../store/slices/vacationSlice';
 
+/**
+ * Interface for vacation card props
+ */
 interface VacationCardProps {
   vacation: Vacation;
   isAdmin?: boolean;
   onDelete?: (id: number) => void;
 }
 
+/**
+ * VacationCard Component Implementation
+ * 
+ * Displays vacation package information in a card format
+ * Uses Material-UI components for styling and animations
+ * 
+ * @param props - Component props containing vacation data and handlers
+ * @returns React component with vacation card
+ */
 const VacationCard: React.FC<VacationCardProps> = ({ vacation, isAdmin, onDelete }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();

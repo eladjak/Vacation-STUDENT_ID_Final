@@ -1,3 +1,22 @@
+/**
+ * AddVacation Component
+ * 
+ * Admin component for adding new vacation packages
+ * Features:
+ * - Form for creating new vacation packages
+ * - Image upload with preview
+ * - Date range selection
+ * - Price input with validation
+ * - Rich text description editor
+ * - Form validation
+ * - Error handling
+ * - Loading state indication
+ * - Responsive design
+ * - RTL support
+ * 
+ * @component
+ */
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -17,6 +36,9 @@ import * as Yup from 'yup';
 import { useAppDispatch } from '../../hooks/redux';
 import { createVacation } from '../../store/slices/vacationSlice';
 
+/**
+ * Interface for vacation form values
+ */
 interface VacationFormValues {
   destination: string;
   description: string;
@@ -26,29 +48,70 @@ interface VacationFormValues {
   image: File | null;
 }
 
+/**
+ * Initial form values for new vacation
+ */
+const initialValues: VacationFormValues = {
+  destination: '',
+  description: '',
+  startDate: null,
+  endDate: null,
+  price: '',
+  image: null,
+};
+
+/**
+ * Validation schema for vacation form
+ * Validates:
+ * - Required destination with min/max length
+ * - Required description with min/max length
+ * - Valid date range
+ * - Positive price value
+ * - Optional image upload with size and format restrictions
+ */
 const validationSchema = Yup.object({
-  destination: Yup.string().required('יש להזין יעד'),
-  description: Yup.string().required('יש להזין תיאור'),
-  startDate: Yup.date().required('יש להזין תאריך התחלה'),
-  endDate: Yup.date()
-    .required('יש להזין תאריך סיום')
-    .min(Yup.ref('startDate'), 'תאריך הסיום חייב להיות אחרי תאריך ההתחלה'),
-  price: Yup.string()
-    .required('יש להזין מחיר')
-    .matches(/^\d+$/, 'המחיר חייב להיות מספר חיובי'),
-  image: Yup.mixed()
-    .required('יש לבחור תמונה')
-    .test('fileFormat', 'פורמט קובץ לא נתמך. יש להשתמש בתמונות מסוג JPG, PNG או GIF', (value: any) => {
-      if (!value) return true;
-      const supportedFormats = ['image/jpeg', 'image/png', 'image/gif'];
-      return value instanceof File && supportedFormats.includes(value.type);
-    })
-    .test('fileSize', 'גודל הקובץ חייב להיות עד 5MB', (value: any) => {
-      if (!value) return true;
-      return value instanceof File && value.size <= 5 * 1024 * 1024; // 5MB
-    }),
+  destination: Yup
+    .string()
+    .required('שדה חובה')
+    .min(2, 'יעד חייב להכיל לפחות 2 תווים')
+    .max(100, 'יעד לא יכול להכיל יותר מ-100 תווים'),
+  description: Yup
+    .string()
+    .required('שדה חובה')
+    .min(10, 'תיאור חייב להכיל לפחות 10 תווים')
+    .max(1000, 'תיאור לא יכול להכיל יותר מ-1000 תווים'),
+  startDate: Yup
+    .date()
+    .required('שדה חובה')
+    .min(new Date(), 'תאריך התחלה חייב להיות בעתיד'),
+  endDate: Yup
+    .date()
+    .required('שדה חובה')
+    .min(Yup.ref('startDate'), 'תאריך סיום חייב להיות אחרי תאריך התחלה'),
+  price: Yup
+    .number()
+    .required('שדה חובה')
+    .min(0, 'מחיר לא יכול להיות שלילי')
+    .max(50000, 'מחיר לא יכול לעלות על 50,000'),
+  image: Yup
+    .mixed<File>()
+    .required('שדה חובה')
+    .test('fileSize', 'גודל הקובץ חייב להיות עד 5MB', (value?: File) => 
+      !value || value.size <= 5 * 1024 * 1024
+    )
+    .test('fileType', 'רק קבצי תמונה מותרים', (value?: File) =>
+      !value || ['image/jpeg', 'image/png', 'image/gif'].includes(value.type)
+    )
 });
 
+/**
+ * AddVacation Component Implementation
+ * 
+ * Provides an interface for administrators to add new vacation packages
+ * Uses Material-UI components for styling and form management
+ * 
+ * @returns React component with vacation creation form
+ */
 const AddVacation: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -56,14 +119,7 @@ const AddVacation: React.FC = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const formik = useFormik<VacationFormValues>({
-    initialValues: {
-      destination: '',
-      description: '',
-      startDate: null,
-      endDate: null,
-      price: '',
-      image: null,
-    },
+    initialValues: initialValues,
     validationSchema,
     onSubmit: async (values) => {
       try {

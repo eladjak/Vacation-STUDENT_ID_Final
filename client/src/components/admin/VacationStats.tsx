@@ -1,3 +1,21 @@
+/**
+ * VacationStats Component
+ * 
+ * Admin component for viewing vacation statistics and analytics
+ * Features:
+ * - Bar chart visualization of vacation followers
+ * - Real-time data updates
+ * - Interactive chart elements
+ * - Responsive design
+ * - Data export functionality
+ * - Loading state indication
+ * - Error handling
+ * - RTL support
+ * - Tooltip information
+ * 
+ * @component
+ */
+
 import React, { useEffect, useState } from 'react';
 import {
   Container,
@@ -34,11 +52,38 @@ ChartJS.register(
   Legend
 );
 
+/**
+ * Interface for vacation statistics data
+ */
 interface VacationStat {
   destination: string;
   followers: number;
 }
 
+/**
+ * Interface for chart data structure
+ */
+interface ChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    backgroundColor: string;
+    borderColor: string;
+    borderWidth: number;
+    borderRadius: number;
+    hoverBackgroundColor: string;
+  }[];
+}
+
+/**
+ * VacationStats Component Implementation
+ * 
+ * Provides statistical visualization of vacation package popularity
+ * Uses Chart.js for data visualization and Material-UI for styling
+ * 
+ * @returns React component with statistics dashboard
+ */
 const VacationStats: React.FC = () => {
   const theme = useTheme();
   const [stats, setStats] = useState<VacationStat[]>([]);
@@ -90,7 +135,7 @@ const VacationStats: React.FC = () => {
     }
   };
 
-  const chartData = {
+  const chartData: ChartData = {
     labels: stats.map(stat => stat.destination),
     datasets: [
       {

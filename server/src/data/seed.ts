@@ -1,17 +1,44 @@
+/**
+ * Database Seeding Module
+ * 
+ * Provides functionality to populate the database with initial test data.
+ * Creates admin and regular users, vacation packages, and simulated follow relationships.
+ * 
+ * Features:
+ * - Database cleanup before seeding
+ * - Admin user creation
+ * - Regular user creation
+ * - Vacation packages creation
+ * - Random follow relationships generation
+ * - Error handling and logging
+ */
+
 import { AppDataSource } from '../config/data-source';
 import { Vacation } from '../entities/vacation.entity';
 import { VacationFollow } from '../entities/vacation-follow.entity';
 import { User } from '../entities/user.entity';
 import bcrypt from 'bcryptjs';
 
+/**
+ * Database Seeding Function
+ * 
+ * Main function to populate the database with initial data.
+ * Process:
+ * 1. Clears existing data
+ * 2. Creates admin and regular users
+ * 3. Creates vacation packages
+ * 4. Generates random follow relationships
+ * 
+ * @throws Error if seeding process fails
+ */
 const seedDatabase = async () => {
   try {
-    // Clear existing data
+    // Clear existing data from all tables
     await AppDataSource.getRepository(VacationFollow).delete({});
     await AppDataSource.getRepository(Vacation).delete({});
     await AppDataSource.getRepository(User).delete({});
 
-    // Create admin user
+    // Create admin user with default credentials
     const hashedPassword = await bcrypt.hash('123456', 10);
     const admin = await AppDataSource.getRepository(User).save({
       firstName: 'Admin',
@@ -22,7 +49,7 @@ const seedDatabase = async () => {
     });
     console.log('Admin user created');
 
-    // Create regular user
+    // Create regular test user
     const user = await AppDataSource.getRepository(User).save({
       firstName: 'Regular',
       lastName: 'User',
@@ -32,7 +59,7 @@ const seedDatabase = async () => {
     });
     console.log('Regular user created');
 
-    // Create vacations
+    // Create sample vacation packages
     const vacations = await Promise.all([
       AppDataSource.getRepository(Vacation).save({
         destination: 'פריז, צרפת',
@@ -116,14 +143,22 @@ const seedDatabase = async () => {
       })
     ]);
 
-    // Get all users
+    // Get all users for follow relationship generation
     const users = await AppDataSource.getRepository(User).find();
 
-    // Create random follows (20-90% of users will follow each vacation)
+    /**
+     * Generate Random Follow Relationships
+     * 
+     * Creates random follow relationships between users and vacations.
+     * Each vacation will be followed by 20-90% of users.
+     */
     for (const vacation of vacations) {
+      // Calculate random number of followers (20-90% of users)
       const followCount = Math.floor(Math.random() * (0.9 - 0.2 + 1) * users.length + 0.2 * users.length);
+      // Randomly shuffle users and select subset
       const shuffledUsers = users.sort(() => Math.random() - 0.5).slice(0, followCount);
       
+      // Create follow relationships
       await Promise.all(
         shuffledUsers.map(user =>
           AppDataSource.getRepository(VacationFollow).save({
@@ -141,5 +176,5 @@ const seedDatabase = async () => {
   }
 };
 
-// Export the seed function
+// Export the seed function for use in application setup
 export { seedDatabase }; 

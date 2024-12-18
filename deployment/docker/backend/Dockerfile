@@ -1,17 +1,34 @@
+# Backend Dockerfile
+#
+# Node.js server configuration for the backend API
+# Features:
+# - Node.js runtime environment
+# - TypeScript compilation
+# - Production dependencies only
+# - Proper file permissions
+# - Security best practices
+
+# Use Node.js LTS version
 FROM node:18-alpine
 
-# Install curl for healthcheck
-RUN apk add --no-cache curl
-
+# Create app directory with proper permissions
 WORKDIR /app
 
-COPY package*.json ./
+# Install production dependencies first
+COPY server/package*.json ./
 RUN npm ci --only=production
 
-COPY . .
+# Copy application source
+COPY server/ ./
 
-RUN npm run build
+# Create uploads directory with proper permissions
+RUN mkdir -p uploads/vacations && chown -R node:node uploads
 
+# Switch to non-root user
+USER node
+
+# Expose API port
 EXPOSE 3001
 
+# Start the server
 CMD ["npm", "start"] 

@@ -1,14 +1,24 @@
 @echo off
-REM build.bat
+:: Application Build Script
+::
+:: Builds both frontend and backend applications
+:: Features:
+:: - Frontend build (React)
+:: - Backend build (Node.js)
+:: - Dependency installation
+:: - Production optimization
+:: - Error handling
 
-echo Building Docker images...
+echo Building applications...
 
-cd ../
-docker-compose build
+:: Build frontend
+echo Building frontend...
+cd ../../client
+npm install && npm run build
 
-if %ERRORLEVEL% NEQ 0 (
-    echo Error building Docker images
-    exit /b %ERRORLEVEL%
-)
+:: Build backend
+echo Building backend...
+cd ../server
+npm install && npm run build
 
-echo Docker images built successfully 
+echo Build completed successfully 

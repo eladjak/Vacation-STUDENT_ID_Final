@@ -1,5 +1,29 @@
+/**
+ * Request Validation Rules
+ * 
+ * Defines validation rules for various API endpoints using express-validator.
+ * Each export provides a set of validation chains for specific request types.
+ * 
+ * Features:
+ * - Input sanitization
+ * - Custom validation rules
+ * - Comprehensive error messages
+ * - Hebrew language support
+ * - Type safety with ValidationChain
+ */
+
 import { body, ValidationChain } from 'express-validator';
 
+/**
+ * Vacation Creation/Update Validation Rules
+ * 
+ * Validates all fields required for vacation management:
+ * - Destination (2-100 characters)
+ * - Description (10-1000 characters)
+ * - Start date (valid ISO date)
+ * - End date (valid ISO date, after start date)
+ * - Price (positive number)
+ */
 export const validateVacation: ValidationChain[] = [
   body('destination')
     .trim()
@@ -40,6 +64,13 @@ export const validateVacation: ValidationChain[] = [
     .withMessage('מחיר החופשה חייב להיות מספר חיובי')
 ];
 
+/**
+ * Login Validation Rules
+ * 
+ * Validates user login credentials:
+ * - Email (valid format)
+ * - Password (minimum 6 characters)
+ */
 export const validateLogin: ValidationChain[] = [
   body('email')
     .trim()
@@ -56,6 +87,14 @@ export const validateLogin: ValidationChain[] = [
     .withMessage('הסיסמה חייבת להכיל לפחות 6 תווים')
 ];
 
+/**
+ * Registration Validation Rules
+ * 
+ * Extends login validation with additional user profile fields:
+ * - First name (2-50 characters)
+ * - Last name (2-50 characters)
+ * - Includes all login validations (email, password)
+ */
 export const validateRegister: ValidationChain[] = [
   ...validateLogin,
   body('firstName')
@@ -73,6 +112,16 @@ export const validateRegister: ValidationChain[] = [
     .withMessage('שם משפחה חייב להיות בין 2 ל-50 תווים')
 ];
 
+/**
+ * Profile Update Validation Rules
+ * 
+ * Validates optional profile update fields:
+ * - First name (optional, 2-50 characters)
+ * - Last name (optional, 2-50 characters)
+ * - Email (optional, valid format)
+ * 
+ * All fields are optional but must meet requirements if provided
+ */
 export const validateUpdateProfile: ValidationChain[] = [
   body('firstName')
     .optional()
@@ -94,6 +143,16 @@ export const validateUpdateProfile: ValidationChain[] = [
     .normalizeEmail()
 ];
 
+/**
+ * Password Change Validation Rules
+ * 
+ * Validates password change request:
+ * - Current password (required)
+ * - New password (required, min 6 chars, must contain letter and number)
+ * - New password must be different from current password
+ * 
+ * Includes security requirements for new password strength
+ */
 export const validateChangePassword: ValidationChain[] = [
   body('currentPassword')
     .trim()

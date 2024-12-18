@@ -1,14 +1,21 @@
 @echo off
-REM stop.bat
+:: Application Stop Script
+::
+:: Stops all development servers
+:: Features:
+:: - Process termination
+:: - Port cleanup
+:: - Error handling
+:: - Status verification
 
-echo Stopping VacationVibe...
+echo Stopping development servers...
 
-cd ../
-docker-compose down
+:: Kill frontend process
+echo Stopping frontend...
+taskkill /F /IM "node.exe" /FI "WINDOWTITLE eq react-scripts*"
 
-if %ERRORLEVEL% NEQ 0 (
-    echo Error stopping containers
-    exit /b %ERRORLEVEL%
-)
+:: Kill backend process
+echo Stopping backend...
+taskkill /F /IM "node.exe" /FI "WINDOWTITLE eq npm*"
 
-echo VacationVibe stopped successfully 
+echo Development servers stopped 

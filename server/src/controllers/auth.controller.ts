@@ -1,3 +1,18 @@
+/**
+ * Authentication Controller
+ * 
+ * Handles all authentication-related operations including user login, registration,
+ * and current user information retrieval. This controller implements security best
+ * practices including password hashing and JWT token generation.
+ * 
+ * Key Features:
+ * - User login with email/password
+ * - New user registration
+ * - Current user information retrieval
+ * - Secure password handling using bcrypt
+ * - JWT token generation for session management
+ */
+
 import { Request, Response } from 'express';
 import { AppDataSource } from '../config/data-source';
 import bcrypt from 'bcryptjs';
@@ -12,13 +27,33 @@ export class AuthController {
     this.userRepository = AppDataSource.getRepository(User);
   }
 
+  /**
+   * User Login Handler
+   * 
+   * Authenticates a user with their email and password, generating a JWT token upon success.
+   * 
+   * @param req - Express request object containing:
+   *   - email: User's email address
+   *   - password: User's password (plain text)
+   * 
+   * @param res - Express response object
+   * 
+   * @returns
+   * Success (200):
+   * - token: JWT authentication token
+   * - user: User object with basic information
+   * 
+   * Error cases:
+   * - 401: Invalid credentials (user not found or wrong password)
+   * - 500: Server error (e.g., database issues, JWT configuration missing)
+   */
   login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     
     console.log('Login attempt:', { email }); // Do not log passwords
 
     try {
-      // Find user
+      // Find user by email
       const user = await this.userRepository.findOne({ where: { email } });
       if (!user) {
         console.log('User not found:', email);
@@ -30,7 +65,7 @@ export class AuthController {
 
       console.log('User found:', { id: user.id, email: user.email, role: user.role });
 
-      // Check password
+      // Verify password using bcrypt
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
         console.log('Password mismatch for user:', email);
@@ -40,7 +75,7 @@ export class AuthController {
         });
       }
 
-      // Generate token
+      // Ensure JWT secret is configured
       const jwtSecret = process.env.JWT_SECRET;
       if (!jwtSecret) {
         console.error('JWT_SECRET is not defined');
@@ -50,6 +85,7 @@ export class AuthController {
         });
       }
 
+      // Generate JWT token with user info and 24-hour expiration
       const token = jwt.sign(
         { userId: user.id, role: user.role },
         jwtSecret,
@@ -58,7 +94,7 @@ export class AuthController {
 
       console.log('Login successful:', { userId: user.id, role: user.role });
 
-      // Return success response
+      // Return user data and token
       return res.json({
         token,
         user: {
@@ -78,11 +114,34 @@ export class AuthController {
     }
   };
 
+  /**
+   * User Registration Handler
+   * 
+   * Creates a new user account with the provided information.
+   * Automatically assigns 'user' role to new registrations.
+   * 
+   * @param req - Express request object containing:
+   *   - firstName: User's first name
+   *   - lastName: User's last name
+   *   - email: User's email address
+   *   - password: User's password (will be hashed)
+   * 
+   * @param res - Express response object
+   * 
+   * @returns
+   * Success (201):
+   * - token: JWT authentication token
+   * - user: Created user object
+   * 
+   * Error cases:
+   * - 400: Email already exists
+   * - 500: Server error (e.g., database issues, password hashing failure)
+   */
   register = async (req: Request, res: Response) => {
     const { firstName, lastName, email, password } = req.body;
 
     try {
-      // Check if user exists
+      // Verify email uniqueness
       const existingUser = await this.userRepository.findOne({ where: { email } });
       if (existingUser) {
         return res.status(400).json({
@@ -91,10 +150,10 @@ export class AuthController {
         });
       }
 
-      // Hash password
+      // Hash password with bcrypt (10 rounds)
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Create user
+      // Create new user with 'user' role
       const user = this.userRepository.create({
         firstName,
         lastName,
@@ -105,7 +164,7 @@ export class AuthController {
 
       await this.userRepository.save(user);
 
-      // Generate token
+      // Generate JWT token for immediate login
       const jwtSecret = process.env.JWT_SECRET;
       if (!jwtSecret) {
         console.error('JWT_SECRET is not defined');
@@ -121,7 +180,7 @@ export class AuthController {
         { expiresIn: '24h' }
       );
 
-      // Send response in the format the client expects
+      // Return new user data and token
       res.status(201).json({
         token,
         user: {
@@ -141,8 +200,26 @@ export class AuthController {
     }
   };
 
+  /**
+   * Current User Information Handler
+   * 
+   * Retrieves information about the currently authenticated user.
+   * Requires valid JWT token in the request (handled by auth middleware).
+   * 
+   * @param req - Express request object (with user property added by auth middleware)
+   * @param res - Express response object
+   * 
+   * @returns
+   * Success (200):
+   * - user: Current user's information
+   * 
+   * Error cases:
+   * - 404: User not found
+   * - 500: Server error (e.g., database issues)
+   */
   getCurrentUser = async (req: Request, res: Response) => {
     try {
+      // Find user by ID (from JWT token)
       const user = await this.userRepository.findOne({
         where: { id: req.user?.id }
       });
@@ -154,7 +231,7 @@ export class AuthController {
         });
       }
 
-      // Return user data in consistent format
+      // Return user data (excluding sensitive information)
       res.json({
         user: {
           id: user.id,
