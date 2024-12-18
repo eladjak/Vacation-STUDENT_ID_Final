@@ -33,6 +33,10 @@ DB_NAME=vacation_db
 # Redis
 REDIS_HOST=localhost
 REDIS_PORT=6379
+
+PAYMENT_GATEWAY_URL=https://api.payment-gateway.com
+PAYMENT_GATEWAY_API_KEY=your_api_key
+PAYMENT_GATEWAY_SECRET=your_secret
 ```
 
 ## 📦 פריסה עם Docker
@@ -65,7 +69,7 @@ docker-compose ps
 
 ### 1. גיבוי
 ```bash
-# גיבוי ��סיס נתונים
+# גיבוי סיס נתונים
 ./scripts/backup.bat
 
 # גיבוי קבצים
@@ -126,4 +130,79 @@ docker exec -it container_name bash
 
 # בדיקת משאבים
 docker stats
-``` 
+```
+
+## Deployment Guide
+
+### Environment Variables
+```env
+PAYMENT_GATEWAY_URL=https://api.payment-gateway.com
+PAYMENT_GATEWAY_API_KEY=your_api_key
+PAYMENT_GATEWAY_SECRET=your_secret
+```
+
+### Database Updates
+New tables and relations:
+- bookings
+  - totalAmount (decimal)
+  - status (enum)
+- payment_transactions
+  - transactionId
+  - status
+  - amount
+
+### Deployment Steps
+1. Update database schema
+2. Configure payment gateway
+3. Set environment variables
+4. Deploy updated services 
+
+## 🔧 הגדרות חדשות
+
+### משתני סביבה חדשים
+```env
+# שער תשלומים
+PAYMENT_GATEWAY_URL=https://api.payment-gateway.com
+PAYMENT_GATEWAY_API_KEY=המפתח_שלך
+PAYMENT_GATEWAY_SECRET=הסוד_שלך
+```
+
+### עדכוני בסיס נתונים
+טבלאות ויחסים חדשים:
+- הזמנות
+  - סכום_כולל (decimal)
+  - סטטוס (enum)
+- עסקאות_תשלום
+  - מזהה_עסקה
+  - סטטוס
+  - סכום
+
+### שלבי פריסה
+1. עדכון סכמת בסיס הנתונים
+2. הגדרת שער התשלומים
+3. הגדרת משתני סביבה
+4. פריסת השירותים המעודכנים
+
+## 🐳 תצורת Docker
+
+```yaml
+version: '3.8'
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - PAYMENT_GATEWAY_URL=${PAYMENT_GATEWAY_URL}
+    depends_on:
+      - db
+      - redis
+
+  payment-service:
+    build: ./payment-service
+    environment:
+      - PAYMENT_GATEWAY_KEY=${PAYMENT_GATEWAY_KEY}
+    ports:
+      - "3002:3002"
+```

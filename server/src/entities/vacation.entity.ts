@@ -18,36 +18,54 @@
 
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { VacationFollow } from './vacation-follow.entity';
+import { IsNotEmpty, IsDate, IsNumber, Min, Max } from 'class-validator';
 
 @Entity('vacations')
 export class Vacation {
   /** Unique identifier for the vacation */
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   /** Name or title of the vacation destination */
   @Column()
-  destination: string;
+  @IsNotEmpty({ message: 'יש להזין כותרת לחופשה' })
+  title: string;
 
   /** Detailed description of the vacation package */
   @Column('text')
   description: string;
 
   /** Start date of the vacation package */
-  @Column({ type: 'date' })
+  @Column()
+  @IsNotEmpty({ message: 'יש להזין יעד' })
+  destination: string;
+
+  /** Start date of the vacation package */
+  @Column('date')
+  @IsDate()
   startDate: Date;
 
   /** End date of the vacation package */
-  @Column({ type: 'date' })
+  @Column('date')
+  @IsDate()
   endDate: Date;
 
   /** Price of the vacation package (supports 2 decimal places) */
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal')
+  @IsNumber()
+  @Min(0, { message: 'המחיר חייב להיות חיובי' })
   price: number;
 
-  /** URL to the vacation's image (optional) */
-  @Column({ nullable: true })
-  imageUrl: string;
+  /** Maximum number of participants for the vacation */
+  @Column('int')
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  maxParticipants: number;
+
+  /** URLs to the vacation's images (optional) */
+  @Column('text', { array: true, default: [] })
+  imageUrls: string[];
 
   /** Collection of user follows for this vacation */
   @OneToMany(() => VacationFollow, follow => follow.vacation)
@@ -66,4 +84,10 @@ export class Vacation {
 
   /** Virtual field: Whether the current user is following this vacation */
   isFollowing?: boolean;
+
+  /** Virtual field: Number of remaining spots for the vacation */
+  @Column('int')
+  @IsNumber()
+  @Min(0)
+  remainingSpots: number;
 } 

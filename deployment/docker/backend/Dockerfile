@@ -17,6 +17,7 @@ WORKDIR /app
 # Install production dependencies first
 COPY server/package*.json ./
 RUN npm ci --only=production
+RUN npm install class-validator class-transformer @nestjs/common@9.4.3 @nestjs/core@9.4.3 @nestjs/platform-express@9.4.3 @nestjs/typeorm@9.4.3 @nestjs/config@9.4.3
 
 # Copy application source
 COPY server/ ./

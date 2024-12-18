@@ -16,14 +16,13 @@
  * - Automatic timestamp tracking
  */
 
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import { VacationFollow } from './vacation-follow.entity';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity('users')
+@Entity()
 export class User {
   /** Unique identifier for the user */
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   /** User's first name */
   @Column()
@@ -46,16 +45,8 @@ export class User {
    * - 'user': Regular user with basic privileges
    * - 'admin': Administrator with full system access
    */
-  @Column({
-    type: 'enum',
-    enum: ['user', 'admin'],
-    default: 'user'
-  })
-  role: 'user' | 'admin';
-
-  /** Collection of vacation follows by this user */
-  @OneToMany(() => VacationFollow, follow => follow.user)
-  follows: VacationFollow[];
+  @Column({ default: 'user' })
+  role: string;
 
   /** Timestamp of when the user account was created */
   @CreateDateColumn()
@@ -64,4 +55,8 @@ export class User {
   /** Timestamp of the last update to the user account */
   @UpdateDateColumn()
   updatedAt: Date;
+
+  /** Indicates whether the user account is active */
+  @Column({ default: true })
+  isActive: boolean;
 } 
