@@ -8,12 +8,23 @@ const data_source_1 = require("../config/data-source");
 const errorHandler_1 = require("../middleware/errorHandler");
 const logger_1 = require("../utils/logger");
 const csv_writer_1 = require("csv-writer");
+const path_1 = require("path");
 const promises_1 = require("fs/promises");
 class VacationService {
     constructor() {
         this.vacationRepository = data_source_1.AppDataSource.getRepository(Vacation_1.Vacation);
         this.followRepository = data_source_1.AppDataSource.getRepository(VacationFollow_1.VacationFollow);
         this.userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
+    }
+    async deleteImageFile(imageUrl) {
+        try {
+            const imagePath = path_1.default.join(__dirname, '../../', imageUrl);
+            await (0, promises_1.unlink)(imagePath);
+            logger_1.logger.info(`Deleted image file: ${imagePath}`);
+        }
+        catch (error) {
+            logger_1.logger.error(`Failed to delete image file: ${imageUrl}`, error);
+        }
     }
     async getAllVacations(userId, page = 1, limit = 10, filters) {
         const skip = (page - 1) * limit;
@@ -56,14 +67,8 @@ class VacationService {
     }
     async updateVacation(id, vacationData) {
         const vacation = await this.getVacationById(id);
-        // If there's a new image and an old one exists, delete the old one
         if (vacationData.imageUrl && vacation.imageUrl && vacationData.imageUrl !== vacation.imageUrl) {
-            try {
-                await (0, promises_1.unlink)(vacation.imageUrl);
-            }
-            catch (error) {
-                logger_1.logger.error(`Failed to delete old image: ${vacation.imageUrl}`, error);
-            }
+            await this.deleteImageFile(vacation.imageUrl);
         }
         Object.assign(vacation, vacationData);
         await this.vacationRepository.save(vacation);
@@ -72,14 +77,8 @@ class VacationService {
     }
     async deleteVacation(id) {
         const vacation = await this.getVacationById(id);
-        // Delete the image file if it exists
         if (vacation.imageUrl) {
-            try {
-                await (0, promises_1.unlink)(vacation.imageUrl);
-            }
-            catch (error) {
-                logger_1.logger.error(`Failed to delete image: ${vacation.imageUrl}`, error);
-            }
+            await this.deleteImageFile(vacation.imageUrl);
         }
         await this.vacationRepository.remove(vacation);
         logger_1.logger.info(`Vacation deleted: ${vacation.destination}`);
@@ -122,7 +121,7 @@ class VacationService {
     }
     async exportToCsv() {
         const stats = await this.getFollowersStats();
-        const csvFilePath = 'uploads/vacation-stats.csv';
+        const csvFilePath = path_1.default.join(__dirname, '../../uploads/vacation-stats.csv');
         const csvWriter = (0, csv_writer_1.createObjectCsvWriter)({
             path: csvFilePath,
             header: [

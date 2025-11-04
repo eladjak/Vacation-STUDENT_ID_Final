@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ormconfig = void 0;
 const dotenv_1 = require("dotenv");
-// טעינת משתני הסביבה
 (0, dotenv_1.config)();
 exports.ormconfig = {
     type: 'mysql',

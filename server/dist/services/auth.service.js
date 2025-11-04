@@ -1,72 +1,62 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
-const User_1 = require("../entities/User");
+const common_1 = require("@nestjs/common");
+const jwt_1 = require("@nestjs/jwt");
+const bcrypt = require("bcrypt");
+const user_entity_1 = require("../entities/user.entity");
 const data_source_1 = require("../config/data-source");
-const errorHandler_1 = require("../middleware/errorHandler");
-const bcryptjs_1 = require("bcryptjs");
-const jsonwebtoken_1 = require("jsonwebtoken");
-const logger_1 = require("../utils/logger");
-class AuthService {
-    constructor() {
-        this.userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
+let AuthService = class AuthService {
+    constructor(jwtService) {
+        this.jwtService = jwtService;
+        this.userRepository = data_source_1.AppDataSource.getRepository(user_entity_1.User);
+    }
+    async validateUser(email, password) {
+        const user = await this.userRepository.findOne({ where: { email } });
+        if (user && await bcrypt.compare(password, user.password)) {
+            const { password, ...result } = user;
+            return result;
+        }
+        throw new common_1.UnauthorizedException('Invalid credentials');
     }
     async register(userData) {
         const existingUser = await this.userRepository.findOne({
             where: { email: userData.email }
         });
         if (existingUser) {
-            throw new errorHandler_1.AppError(400, 'Email already exists');
+            throw new common_1.ConflictException('Email already exists');
         }
-        const hashedPassword = await (0, bcryptjs_1.hash)(userData.password, 12);
+        const hashedPassword = await bcrypt.hash(userData.password, 10);
         const user = this.userRepository.create({
             ...userData,
-            password: hashedPassword
+            password: hashedPassword,
+            role: 'user'
         });
         await this.userRepository.save(user);
-        logger_1.logger.info(`New user registered: ${user.email}`);
-        const token = this.generateToken(user);
-        return { user, token };
+        const { password, ...result } = user;
+        return result;
     }
-    async login(email, password) {
-        const user = await this.userRepository.findOne({
-            where: { email }
-        });
-        if (!user) {
-            logger_1.logger.error(`Login failed: User not found - ${email}`);
-            throw new errorHandler_1.AppError(401, 'Invalid credentials');
-        }
-        try {
-            logger_1.logger.info(`Attempting password comparison for user ${email}`);
-            logger_1.logger.info(`Input password length: ${password.length}`);
-            logger_1.logger.info(`Stored hash: ${user.password}`);
-            const isPasswordValid = await (0, bcryptjs_1.compare)(password, user.password);
-            logger_1.logger.info(`Password comparison result: ${isPasswordValid}`);
-            if (!isPasswordValid) {
-                logger_1.logger.error(`Login failed: Invalid password for user - ${email}`);
-                throw new errorHandler_1.AppError(401, 'Invalid credentials');
-            }
-            logger_1.logger.info(`User logged in successfully: ${email}`);
-            const token = this.generateToken(user);
-            return { user, token };
-        }
-        catch (error) {
-            logger_1.logger.error(`Login error for user ${email}:`, error);
-            throw new errorHandler_1.AppError(401, 'Invalid credentials');
-        }
+    async generateToken(user) {
+        const payload = {
+            sub: user.id,
+            email: user.email,
+            role: user.role
+        };
+        return this.jwtService.sign(payload);
     }
-    generateToken(user) {
-        return (0, jsonwebtoken_1.sign)({ id: user.id, role: user.role }, process.env.JWT_SECRET || 'your-secret-key', { expiresIn: process.env.JWT_EXPIRES_IN || '24h' });
-    }
-    async refreshToken(userId) {
-        const user = await this.userRepository.findOne({
-            where: { id: userId }
-        });
-        if (!user) {
-            throw new errorHandler_1.AppError(401, 'User not found');
-        }
-        return this.generateToken(user);
-    }
-}
+};
+AuthService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [jwt_1.JwtService])
+], AuthService);
 exports.AuthService = AuthService;
 //# sourceMappingURL=auth.service.js.map

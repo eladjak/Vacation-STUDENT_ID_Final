@@ -1,93 +1,165 @@
 /**
  * Vacation Entity
  * 
- * Represents a vacation package in the system.
- * This entity stores all vacation-related information including
- * destination details, dates, pricing, and tracking of user follows.
- * 
- * Database Table: 'vacations'
- * 
- * Relations:
- * - One-to-Many with VacationFollow (one vacation can be followed by many users)
+ * Represents a vacation package in the system with all its properties
+ * and relationships. Includes validation rules and helper methods.
  * 
  * Features:
- * - Automatic timestamp tracking (created/updated)
- * - Virtual fields for follower statistics
- * - Image management support
+ * - Basic vacation information (title, description, destination)
+ * - Pricing and dates
+ * - Multiple image support
+ * - Participant management
+ * - Follow system integration
+ * - Automatic timestamps
+ * 
+ * @module Entities
  */
-
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { 
+  Entity, 
+  PrimaryGeneratedColumn, 
+  Column, 
+  CreateDateColumn, 
+  UpdateDateColumn,
+  OneToMany
+} from 'typeorm';
+import { 
+  IsString, 
+  IsNotEmpty, 
+  MinLength, 
+  MaxLength, 
+  IsNumber, 
+  Min, 
+  IsDate, 
+  IsArray, 
+  ArrayMinSize,
+  ArrayMaxSize,
+  IsUrl
+} from 'class-validator';
 import { VacationFollow } from './vacation-follow.entity';
-import { IsNotEmpty, IsDate, IsNumber, Min, Max } from 'class-validator';
 
 @Entity('vacations')
 export class Vacation {
-  /** Unique identifier for the vacation */
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  /** Name or title of the vacation destination */
   @Column()
-  @IsNotEmpty({ message: 'יש להזין כותרת לחופשה' })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(3)
+  @MaxLength(100)
   title: string;
 
-  /** Detailed description of the vacation package */
   @Column('text')
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(10)
+  @MaxLength(1000)
   description: string;
 
-  /** Start date of the vacation package */
   @Column()
-  @IsNotEmpty({ message: 'יש להזין יעד' })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(2)
+  @MaxLength(100)
   destination: string;
 
-  /** Start date of the vacation package */
-  @Column('date')
+  @Column({ 
+    type: 'decimal', 
+    precision: 10, 
+    scale: 2 
+  })
+  @IsNumber()
+  @Min(0)
+  price: number;
+
+  @Column({ type: 'date' })
   @IsDate()
   startDate: Date;
 
-  /** End date of the vacation package */
-  @Column('date')
+  @Column({ type: 'date' })
   @IsDate()
   endDate: Date;
 
-  /** Price of the vacation package (supports 2 decimal places) */
-  @Column('decimal')
-  @IsNumber()
-  @Min(0, { message: 'המחיר חייב להיות חיובי' })
-  price: number;
-
-  /** Maximum number of participants for the vacation */
-  @Column('int')
-  @IsNumber()
-  @Min(0)
-  @Max(100)
-  maxParticipants: number;
-
-  /** URLs to the vacation's images (optional) */
-  @Column('text', { array: true, default: [] })
+  @Column('simple-array')
+  @IsArray()
+  @ArrayMinSize(0)
+  @ArrayMaxSize(10)
+  @IsUrl({}, { each: true })
   imageUrls: string[];
 
-  /** Collection of user follows for this vacation */
+  @Column({ default: 0 })
+  @IsNumber()
+  @Min(0)
+  followersCount: number;
+
+  @Column({ type: 'int' })
+  @IsNumber()
+  @Min(1)
+  maxParticipants: number;
+
+  @Column({ 
+    type: 'int', 
+    default: 0 
+  })
+  @IsNumber()
+  @Min(0)
+  currentParticipants: number;
+
   @OneToMany(() => VacationFollow, follow => follow.vacation)
   follows: VacationFollow[];
 
-  /** Timestamp of when the vacation was created */
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  /** Timestamp of the last update to the vacation */
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  /** Virtual field: Number of users following this vacation */
-  followersCount: number = 0;
+  /**
+   * Virtual property for backward compatibility
+   * Returns the first image URL from the array
+   * 
+   * @returns {string | null} The first image URL or null if no images exist
+   */
+  get imageUrl(): string | null {
+    return this.imageUrls && this.imageUrls.length > 0 ? this.imageUrls[0] : null;
+  }
 
-  /** Virtual field: Whether the current user is following this vacation */
-  isFollowing?: boolean;
+  /**
+   * Calculates the number of remaining spots in the vacation
+   * 
+   * @returns {number} The number of spots still available for booking
+   */
+  calculateRemainingSpots(): number {
+    return this.maxParticipants - (this.currentParticipants || 0);
+  }
 
-  /** Virtual field: Number of remaining spots for the vacation */
-  @Column('int')
-  @IsNumber()
-  @Min(0)
-  remainingSpots: number;
+  /**
+   * Checks if the vacation is currently active
+   * 
+   * @returns {boolean} True if the vacation is currently active
+   */
+  isActive(): boolean {
+    const now = new Date();
+    return this.startDate <= now && this.endDate >= now;
+  }
+
+  /**
+   * Checks if the vacation is upcoming
+   * 
+   * @returns {boolean} True if the vacation hasn't started yet
+   */
+  isUpcoming(): boolean {
+    const now = new Date();
+    return this.startDate > now;
+  }
+
+  /**
+   * Checks if there are enough spots available for a booking
+   * 
+   * @param {number} spots - Number of spots to check
+   * @returns {boolean} True if enough spots are available
+   */
+  hasAvailableSpots(spots: number): boolean {
+    return this.calculateRemainingSpots() >= spots;
+  }
 } 

@@ -1,0 +1,21 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "root",
+  "password": "",
+  "database": "vacation_db",
+  "entities": ["dist/**/*.entity{.ts,.js}"],
+  "migrations": ["dist/migrations/*{.ts,.js}"],
+  "cli": {
+    "migrationsDir": "src/migrations",
+    "entitiesDir": "src/entities"
+  },
+  "synchronize": false,
+  "logging": true,
+  "migrationsRun": true,
+  "migrationsTableName": "migrations",
+  "extra": {
+    "charset": "utf8mb4_unicode_ci"
+  }
+} 

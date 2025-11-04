@@ -13,15 +13,15 @@
  * - Data validation
  */
 
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { User } from '../entities/User';
+import { User } from '../entities/user.entity';
 import { AppDataSource } from '../config/data-source';
-import { AppError } from '../middleware/errorHandler';
-import { compare, hash } from 'bcryptjs';
-import { logger } from '../utils/logger';
+import * as bcrypt from 'bcrypt';
 
+@Injectable()
 export class UserService {
-  private userRepository: Repository<User>;
+  private readonly userRepository: Repository<User>;
 
   constructor() {
     this.userRepository = AppDataSource.getRepository(User);
@@ -38,16 +38,11 @@ export class UserService {
    * @throws AppError
    * - 404: User not found
    */
-  async findById(id: number): Promise<User> {
-    const user = await this.userRepository.findOne({
-      where: { id },
-      relations: ['followedVacations']
-    });
-
+  async findById(id: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
-      throw new AppError(404, 'User not found');
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
-
     return user;
   }
 
@@ -65,27 +60,15 @@ export class UserService {
    * - 404: User not found
    * - 400: Email already exists
    */
-  async updateProfile(
-    userId: number,
-    userData: Pick<User, 'firstName' | 'lastName' | 'email'>
-  ): Promise<User> {
-    const user = await this.findById(userId);
-
-    // Check email uniqueness if being changed
-    if (userData.email && userData.email !== user.email) {
-      const existingUser = await this.userRepository.findOne({
-        where: { email: userData.email }
-      });
-
-      if (existingUser) {
-        throw new AppError(400, 'Email already exists');
-      }
-    }
-
-    Object.assign(user, userData);
-    await this.userRepository.save(user);
-    logger.info(`User profile updated: ${user.email}`);
-    return user;
+  async updateProfile(id: string, updateData: Partial<User>): Promise<User> {
+    const user = await this.findById(id);
+    
+    // Remove sensitive fields from update data
+    delete updateData.password;
+    delete updateData.role;
+    
+    Object.assign(user, updateData);
+    return this.userRepository.save(user);
   }
 
   /**
@@ -102,23 +85,16 @@ export class UserService {
    * - 404: User not found
    * - 401: Current password incorrect
    */
-  async changePassword(
-    userId: number,
-    currentPassword: string,
-    newPassword: string
-  ): Promise<void> {
-    const user = await this.findById(userId);
+  async changePassword(id: string, currentPassword: string, newPassword: string): Promise<void> {
+    const user = await this.findById(id);
 
-    // Verify current password
-    const isPasswordValid = await compare(currentPassword, user.password);
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
     if (!isPasswordValid) {
-      throw new AppError(401, 'Current password is incorrect');
+      throw new Error('Current password is incorrect');
     }
 
-    // Hash and save new password
-    user.password = await hash(newPassword, 10);
+    user.password = await bcrypt.hash(newPassword, 10);
     await this.userRepository.save(user);
-    logger.info(`Password changed for user: ${user.email}`);
   }
 
   /**
@@ -132,16 +108,12 @@ export class UserService {
    * @throws AppError
    * - 404: User not found
    */
-  async getFollowedVacations(userId: number): Promise<User['followedVacations']> {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-      relations: ['followedVacations']
-    });
-
-    if (!user) {
-      throw new AppError(404, 'User not found');
-    }
-
-    return user.followedVacations;
+  async getFollowedVacations(userId: string): Promise<any[]> {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.follows', 'follow')
+      .leftJoinAndSelect('follow.vacation', 'vacation')
+      .where('user.id = :userId', { userId })
+      .getMany();
   }
 } 

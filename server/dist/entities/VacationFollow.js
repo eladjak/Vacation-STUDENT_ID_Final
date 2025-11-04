@@ -15,7 +15,6 @@ const User_1 = require("./User");
 const Vacation_1 = require("./Vacation");
 let VacationFollow = class VacationFollow {
 };
-exports.VacationFollow = VacationFollow;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
@@ -42,8 +41,9 @@ __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], VacationFollow.prototype, "createdAt", void 0);
-exports.VacationFollow = VacationFollow = __decorate([
+VacationFollow = __decorate([
     (0, typeorm_1.Entity)('vacation_follows'),
     (0, typeorm_1.Unique)(['userId', 'vacationId'])
 ], VacationFollow);
+exports.VacationFollow = VacationFollow;
 //# sourceMappingURL=VacationFollow.js.map

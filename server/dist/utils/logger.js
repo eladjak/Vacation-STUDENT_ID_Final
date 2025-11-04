@@ -1,30 +1,64 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logger = void 0;
-const winston_1 = __importDefault(require("winston"));
-const dotenv_1 = require("dotenv");
-(0, dotenv_1.config)();
-const logFormat = winston_1.default.format.combine(winston_1.default.format.timestamp(), winston_1.default.format.errors({ stack: true }), winston_1.default.format.json());
-exports.logger = winston_1.default.createLogger({
-    level: process.env.LOG_LEVEL || 'info',
-    format: logFormat,
-    transports: [
-        // Write all logs to console
-        new winston_1.default.transports.Console({
-            format: winston_1.default.format.combine(winston_1.default.format.colorize(), winston_1.default.format.simple())
-        }),
-        // Write all logs with level 'error' and below to 'error.log'
-        new winston_1.default.transports.File({
-            filename: 'logs/error.log',
-            level: 'error'
-        }),
-        // Write all logs to 'combined.log'
-        new winston_1.default.transports.File({
-            filename: 'logs/combined.log'
-        })
-    ]
+exports.loggerStream = exports.logger = void 0;
+const winston_1 = require("winston");
+const path_1 = require("path");
+const { combine, timestamp, printf, colorize, json } = winston_1.format;
+const devConsoleFormat = printf(({ level, message, timestamp, ...metadata }) => {
+    let msg = `${timestamp} [${level}]: ${message}`;
+    if (Object.keys(metadata).length > 0) {
+        msg += `\n${JSON.stringify(metadata, null, 2)}`;
+    }
+    return msg;
 });
+const logDir = (0, path_1.join)(__dirname, '../../logs');
+const errorLogPath = (0, path_1.join)(logDir, 'error.log');
+const combinedLogPath = (0, path_1.join)(logDir, 'combined.log');
+const logger = (0, winston_1.createLogger)({
+    level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+    format: combine(timestamp(), json()),
+    defaultMeta: {
+        service: 'vacation-service',
+        environment: process.env.NODE_ENV || 'development'
+    },
+    transports: [
+        new winston_1.transports.File({
+            filename: errorLogPath,
+            level: 'error',
+            maxsize: 5242880,
+            maxFiles: 5,
+        }),
+        new winston_1.transports.File({
+            filename: combinedLogPath,
+            maxsize: 5242880,
+            maxFiles: 5,
+        }),
+    ],
+    exceptionHandlers: [
+        new winston_1.transports.File({
+            filename: (0, path_1.join)(logDir, 'exceptions.log'),
+            maxsize: 5242880,
+            maxFiles: 5,
+        })
+    ],
+    rejectionHandlers: [
+        new winston_1.transports.File({
+            filename: (0, path_1.join)(logDir, 'rejections.log'),
+            maxsize: 5242880,
+            maxFiles: 5,
+        })
+    ],
+});
+exports.logger = logger;
+if (process.env.NODE_ENV !== 'production') {
+    logger.add(new winston_1.transports.Console({
+        format: combine(colorize(), timestamp(), devConsoleFormat),
+    }));
+}
+const loggerStream = {
+    write: (message) => {
+        logger.info(message.trim());
+    },
+};
+exports.loggerStream = loggerStream;
 //# sourceMappingURL=logger.js.map

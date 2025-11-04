@@ -1,91 +1,43 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Booking } from '../entities/booking.entity';
-import { VacationsService } from '../vacations/vacations.service';
+import { Vacation } from '../entities/vacation.entity';
 
-/**
- * Valid booking statuses
- */
-export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'CANCELLED';
-
-/**
- * Data required for creating a new booking
- */
-export interface CreateBookingDto {
-  userId: string;
-  vacationId: string;
-  numberOfParticipants: number;
-}
-
-/**
- * Service handling booking operations
- * Manages vacation bookings, including creation, updates, and status management
- */
 @Injectable()
 export class BookingsService {
   constructor(
-    @InjectRepository(Booking)
-    private bookingRepository: Repository<Booking>,
-    private vacationsService: VacationsService
+    @InjectRepository(Vacation)
+    private readonly vacationRepository: Repository<Vacation>
   ) {}
 
-  /**
-   * Creates a new booking
-   * @param bookingData - Data for the new booking
-   * @returns Created booking entity
-   */
-  async create(bookingData: CreateBookingDto): Promise<Booking> {
-    const vacation = await this.vacationsService.findOne(bookingData.vacationId);
-    
-    if (vacation.remainingSpots < bookingData.numberOfParticipants) {
-      throw new Error('Not enough spots available');
+  async findOne(id: string) {
+    const vacation = await this.vacationRepository.findOne({ where: { id } });
+    if (!vacation) {
+      throw new NotFoundException(`Vacation with ID ${id} not found`);
     }
-
-    const booking = this.bookingRepository.create({
-      numberOfParticipants: bookingData.numberOfParticipants,
-      status: 'PENDING',
-      vacation,
-      user: { id: bookingData.userId } as any
-    });
-    
-    // Save the booking first
-    const savedBooking = await this.bookingRepository.save(booking);
-    
-    // Then update vacation spots
-    vacation.remainingSpots -= bookingData.numberOfParticipants;
-    await this.vacationsService.save(vacation);
-    
-    return savedBooking;
+    return vacation;
   }
 
-  /**
-   * Updates booking status
-   * @param id - Booking ID
-   * @param status - New status
-   * @returns Updated booking
-   */
-  async updateStatus(id: string, status: BookingStatus): Promise<Booking> {
-    const booking = await this.findOne(id);
-    booking.status = status;
-    return await this.bookingRepository.save(booking);
+  async updateStatus(id: string, status: string) {
+    const vacation = await this.findOne(id);
+    // Add your status update logic here
+    return this.vacationRepository.save(vacation);
   }
 
-  /**
-   * Finds a booking by ID
-   * @param id - Booking ID
-   * @returns Booking entity
-   */
-  async findOne(id: string): Promise<Booking> {
-    const booking = await this.bookingRepository.findOne({
-      where: { id },
-      relations: ['vacation', 'user']
-    });
+  async createBooking(bookingData: { vacationId: string; numberOfParticipants: number }) {
+    const vacation = await this.findOne(bookingData.vacationId);
 
-    if (!booking) {
-      throw new NotFoundException('Booking not found');
+    if (vacation.calculateRemainingSpots() < bookingData.numberOfParticipants) {
+      throw new BadRequestException('Not enough spots available');
     }
 
-    return booking;
+    vacation.currentParticipants += bookingData.numberOfParticipants;
+    await this.vacationRepository.save(vacation);
+
+    return {
+      success: true,
+      message: 'Booking created successfully',
+      remainingSpots: vacation.calculateRemainingSpots()
+    };
   }
 } 

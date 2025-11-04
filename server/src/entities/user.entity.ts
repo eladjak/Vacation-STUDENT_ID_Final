@@ -2,61 +2,148 @@
  * User Entity
  * 
  * Represents a user in the system with authentication and profile information.
- * Supports both regular users and administrators with different access levels.
- * 
- * Database Table: 'users'
- * 
- * Relations:
- * - One-to-Many with VacationFollow (one user can follow many vacations)
+ * Handles user roles, vacation follows, and account status.
  * 
  * Features:
- * - Role-based access control (user/admin)
+ * - Basic user information (name, email)
  * - Secure password storage
- * - Email uniqueness enforcement
- * - Automatic timestamp tracking
+ * - Role-based access control
+ * - Vacation follow relationships
+ * - Account status tracking
+ * - Automatic timestamps
+ * 
+ * @module Entities
  */
+import { 
+  Entity, 
+  PrimaryGeneratedColumn, 
+  Column, 
+  CreateDateColumn, 
+  UpdateDateColumn,
+  OneToMany,
+  BeforeInsert,
+  BeforeUpdate
+} from 'typeorm';
+import { 
+  IsString, 
+  IsEmail, 
+  MinLength, 
+  MaxLength, 
+  IsNotEmpty,
+  IsBoolean,
+  IsEnum,
+  IsUUID
+} from 'class-validator';
+import { VacationFollow } from './vacation-follow.entity';
+import * as bcrypt from 'bcrypt';
 
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+export type UserRole = 'user' | 'admin';
 
-@Entity()
+@Entity('users')
 export class User {
-  /** Unique identifier for the user */
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @IsUUID()
+  id!: string;
 
-  /** User's first name */
   @Column()
-  firstName: string;
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(2)
+  @MaxLength(50)
+  firstName!: string;
 
-  /** User's last name */
   @Column()
-  lastName: string;
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(2)
+  @MaxLength(50)
+  lastName!: string;
 
-  /** User's email address (unique) */
   @Column({ unique: true })
-  email: string;
+  @IsEmail()
+  @IsNotEmpty()
+  email!: string;
 
-  /** Hashed password */
   @Column()
-  password: string;
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(8)
+  @MaxLength(100)
+  password!: string;
 
-  /** 
-   * User role for access control
-   * - 'user': Regular user with basic privileges
-   * - 'admin': Administrator with full system access
-   */
   @Column({ default: 'user' })
-  role: string;
+  @IsEnum(['user', 'admin'])
+  role!: UserRole;
 
-  /** Timestamp of when the user account was created */
+  @OneToMany(() => VacationFollow, follow => follow.user)
+  follows!: VacationFollow[];
+
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
-  /** Timestamp of the last update to the user account */
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
-  /** Indicates whether the user account is active */
   @Column({ default: true })
-  isActive: boolean;
+  @IsBoolean()
+  isActive!: boolean;
+
+  /**
+   * Hash password before inserting or updating
+   */
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword() {
+    if (this.password) {
+      const salt = await bcrypt.genSalt();
+      this.password = await bcrypt.hash(this.password, salt);
+    }
+  }
+
+  /**
+   * Get user's full name
+   * 
+   * @returns {string} The user's full name
+   */
+  getFullName(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
+
+  /**
+   * Check if user has admin role
+   * 
+   * @returns {boolean} True if user is an admin
+   */
+  isAdmin(): boolean {
+    return this.role === 'admin';
+  }
+
+  /**
+   * Check if user is following a specific vacation
+   * 
+   * @param {string} vacationId - The ID of the vacation to check
+   * @returns {boolean} True if user is following the vacation
+   */
+  isFollowingVacation(vacationId: string): boolean {
+    return this.follows?.some(follow => follow.vacation.id === vacationId) || false;
+  }
+
+  /**
+   * Get all vacation IDs that the user is following
+   * 
+   * @returns {string[]} Array of vacation IDs
+   */
+  getFollowedVacationIds(): string[] {
+    return this.follows?.map(follow => follow.vacation.id) || [];
+  }
+
+  /**
+   * Verify user's password
+   * 
+   * @param {string} password - The password to verify
+   * @returns {Promise<boolean>} True if password matches
+   */
+  async verifyPassword(password: string): Promise<boolean> {
+    return bcrypt.compare(password, this.password);
+  }
 } 

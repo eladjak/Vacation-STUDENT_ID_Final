@@ -1,68 +1,96 @@
 /**
- * Logger Configuration Module
+ * Logger Utility
  * 
- * Configures and exports a Winston logger instance for application-wide logging.
- * Provides structured logging with timestamps, error stacks, and multiple output targets.
+ * Provides centralized logging functionality for the application.
+ * Uses Winston for logging with different transports and formats.
  * 
  * Features:
- * - Console output with colors
- * - Error log file for errors
- * - Combined log file for all levels
+ * - Multiple log levels
+ * - File and console logging
  * - JSON formatting
- * - Timestamp inclusion
  * - Error stack traces
- * - Configurable log level via environment
+ * - Request context
+ * - Environment-based configuration
  */
+import { createLogger, format, transports } from 'winston';
+import { join } from 'path';
 
-import winston from 'winston';
-import { config } from 'dotenv';
+const { combine, timestamp, printf, colorize, json } = format;
 
-config();
+// Custom format for development console output
+const devConsoleFormat = printf(({ level, message, timestamp, ...metadata }) => {
+  let msg = `${timestamp} [${level}]: ${message}`;
+  
+  if (Object.keys(metadata).length > 0) {
+    msg += `\n${JSON.stringify(metadata, null, 2)}`;
+  }
+  
+  return msg;
+});
 
-/**
- * Log Format Configuration
- * 
- * Combines multiple Winston formats:
- * - timestamp: Adds ISO timestamp to each log
- * - errors: Includes error stack traces
- * - json: Structures logs in JSON format
- */
-const logFormat = winston.format.combine(
-  winston.format.timestamp(),
-  winston.format.errors({ stack: true }),
-  winston.format.json()
-);
+// Create log directory if it doesn't exist
+const logDir = join(__dirname, '../../logs');
+const errorLogPath = join(logDir, 'error.log');
+const combinedLogPath = join(logDir, 'combined.log');
 
-/**
- * Winston Logger Instance
- * 
- * Configured with multiple transports:
- * 1. Console: Colorized output for development
- * 2. Error File: Logs errors to 'logs/error.log'
- * 3. Combined File: All logs to 'logs/combined.log'
- * 
- * Log level is configurable via LOG_LEVEL environment variable
- * Defaults to 'info' if not specified
- */
-export const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || 'info',
-  format: logFormat,
+// Configure logger based on environment
+const logger = createLogger({
+  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  format: combine(
+    timestamp(),
+    json()
+  ),
+  defaultMeta: { 
+    service: 'vacation-service',
+    environment: process.env.NODE_ENV || 'development'
+  },
   transports: [
-    // Write all logs to console with colors
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      )
+    // Write all logs error (and below) to error.log
+    new transports.File({ 
+      filename: errorLogPath,
+      level: 'error',
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
     }),
-    // Write error logs to dedicated file
-    new winston.transports.File({ 
-      filename: 'logs/error.log', 
-      level: 'error' 
+    // Write all logs to combined.log
+    new transports.File({ 
+      filename: combinedLogPath,
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
     }),
-    // Write all logs to combined file
-    new winston.transports.File({ 
-      filename: 'logs/combined.log' 
+  ],
+  exceptionHandlers: [
+    new transports.File({ 
+      filename: join(logDir, 'exceptions.log'),
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
     })
-  ]
-}); 
+  ],
+  rejectionHandlers: [
+    new transports.File({ 
+      filename: join(logDir, 'rejections.log'),
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
+    })
+  ],
+});
+
+// Add console transport in development
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new transports.Console({
+    format: combine(
+      colorize(),
+      timestamp(),
+      devConsoleFormat
+    ),
+  }));
+}
+
+// Create a stream object with a 'write' function that will be used by Morgan
+const loggerStream = {
+  write: (message: string) => {
+    logger.info(message.trim());
+  },
+};
+
+export { logger, loggerStream }; 

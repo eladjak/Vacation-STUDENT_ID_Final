@@ -1,46 +1,39 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
-const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
-const dotenv_1 = require("dotenv");
+const express_1 = require("express");
+const cors_1 = require("cors");
+const path_1 = require("path");
 const data_source_1 = require("./config/data-source");
-const errorHandler_1 = require("./middleware/errorHandler");
-const logger_1 = require("./utils/logger");
-const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
-const vacation_routes_1 = __importDefault(require("./routes/vacation.routes"));
-const user_routes_1 = __importDefault(require("./routes/user.routes"));
-// Load environment variables
-(0, dotenv_1.config)();
+const auth_routes_1 = require("./routes/auth.routes");
+const vacation_routes_1 = require("./routes/vacation.routes");
+const auth_1 = require("./middleware/auth");
+const seed_1 = require("./data/seed");
 const app = (0, express_1.default)();
-// Middleware
-app.use((0, cors_1.default)({
-    origin: 'http://localhost:3000',
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: true }));
-// Routes
+app.use('/uploads', express_1.default.static(path_1.default.join(__dirname, '..', 'uploads')));
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
 app.use('/api/v1/auth', auth_routes_1.default);
-app.use('/api/v1/vacations', vacation_routes_1.default);
-app.use('/api/v1/users', user_routes_1.default);
-// Error handling
-app.use(errorHandler_1.errorHandler);
-// Database connection and server startup
-const PORT = process.env.PORT || 3001;
+app.use('/api/v1/vacations', auth_1.auth, vacation_routes_1.default);
 data_source_1.AppDataSource.initialize()
-    .then(() => {
-    app.listen(PORT, () => {
-        logger_1.logger.info(`Server is running on port ${PORT}`);
+    .then(async () => {
+    console.log('Database connection initialized successfully');
+    try {
+        await (0, seed_1.seedDatabase)();
+        console.log('Database seeded successfully');
+    }
+    catch (error) {
+        console.error('Error seeding database:', error);
+    }
+    const port = process.env.PORT || 3001;
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
     });
 })
     .catch((error) => {
-    logger_1.logger.error('Database connection error:', error);
-    process.exit(1);
+    console.error('Error initializing database connection:', error);
 });
 //# sourceMappingURL=index.js.map

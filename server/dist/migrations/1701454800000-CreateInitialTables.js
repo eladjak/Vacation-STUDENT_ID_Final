@@ -6,7 +6,6 @@ class CreateInitialTables1701454800000 {
         this.name = 'CreateInitialTables1701454800000';
     }
     async up(queryRunner) {
-        // Create users table
         await queryRunner.query(`
             CREATE TABLE users (
                 id INT NOT NULL AUTO_INCREMENT,
@@ -20,7 +19,6 @@ class CreateInitialTables1701454800000 {
                 PRIMARY KEY (id)
             ) ENGINE=InnoDB
         `);
-        // Create vacations table
         await queryRunner.query(`
             CREATE TABLE vacations (
                 id INT NOT NULL AUTO_INCREMENT,
@@ -36,7 +34,6 @@ class CreateInitialTables1701454800000 {
                 PRIMARY KEY (id)
             ) ENGINE=InnoDB
         `);
-        // Create vacation_follows table
         await queryRunner.query(`
             CREATE TABLE vacation_follows (
                 id INT NOT NULL AUTO_INCREMENT,
@@ -49,13 +46,11 @@ class CreateInitialTables1701454800000 {
                 FOREIGN KEY (vacationId) REFERENCES vacations(id) ON DELETE CASCADE
             ) ENGINE=InnoDB
         `);
-        // Add indexes
         await queryRunner.query(`CREATE INDEX IDX_users_email ON users(email)`);
         await queryRunner.query(`CREATE INDEX IDX_vacations_startDate ON vacations(startDate)`);
         await queryRunner.query(`CREATE INDEX IDX_vacations_endDate ON vacations(endDate)`);
     }
     async down(queryRunner) {
-        // Drop tables in reverse order
         await queryRunner.query(`DROP TABLE IF EXISTS vacation_follows`);
         await queryRunner.query(`DROP TABLE IF EXISTS vacations`);
         await queryRunner.query(`DROP TABLE IF EXISTS users`);

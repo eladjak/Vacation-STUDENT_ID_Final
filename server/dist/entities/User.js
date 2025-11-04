@@ -16,15 +16,13 @@ var UserRole;
 (function (UserRole) {
     UserRole["USER"] = "user";
     UserRole["ADMIN"] = "admin";
-})(UserRole || (exports.UserRole = UserRole = {}));
+})(UserRole = exports.UserRole || (exports.UserRole = {}));
 let User = class User {
-    // מתודה להסרת שדות רגישים בעת החזרת המשתמש
     toJSON() {
         const { password, ...user } = this;
         return user;
     }
 };
-exports.User = User;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
@@ -65,7 +63,8 @@ __decorate([
     (0, typeorm_1.UpdateDateColumn)(),
     __metadata("design:type", Date)
 ], User.prototype, "updatedAt", void 0);
-exports.User = User = __decorate([
+User = __decorate([
     (0, typeorm_1.Entity)('users')
 ], User);
+exports.User = User;
 //# sourceMappingURL=User.js.map

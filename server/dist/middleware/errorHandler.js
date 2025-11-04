@@ -27,7 +27,6 @@ const errorHandler = (err, req, res, next) => {
             ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
         });
     }
-    // For unhandled errors
     return res.status(500).json({
         status: 'error',
         message: 'Internal server error',

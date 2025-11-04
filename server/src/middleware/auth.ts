@@ -17,6 +17,8 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { User } from '../entities/user.entity';
 import { AppDataSource } from '../config/data-source';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 /**
  * JWT Payload Interface
@@ -36,6 +38,46 @@ declare global {
     interface Request {
       user?: User;  // Authenticated user object
     }
+  }
+}
+
+@Injectable()
+export class AuthGuard implements CanActivate {
+  private readonly jwtService: JwtService;
+  
+  constructor() {
+    this.jwtService = new JwtService({
+      secret: process.env.JWT_SECRET
+    });
+  }
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest<Request>();
+    const token = this.extractTokenFromHeader(request);
+    
+    if (!token) {
+      throw new UnauthorizedException('No token provided');
+    }
+
+    try {
+      const payload = await this.jwtService.verifyAsync(token);
+      const userRepository = AppDataSource.getRepository(User);
+      const user = await userRepository.findOne({ where: { id: payload.sub } });
+      
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+
+      request.user = user;
+      return true;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid token');
+    }
+  }
+
+  private extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
   }
 }
 
@@ -62,85 +104,16 @@ declare global {
  * - 401: Missing/invalid token, user not found
  * - 500: Server configuration issues
  */
-export const auth = async (req: Request, res: Response, next: NextFunction) => {
+export const auth = async (req: Request, res: Response, next: Function) => {
+  const guard = new AuthGuard();
   try {
-    // Extract and validate Bearer token
-    const authHeader = req.header('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return res.status(401).json({
-        status: 'error',
-        message: 'אין הרשאה. נדרשת הזדהות.'
-      });
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    
-    // Verify JWT secret configuration
-    const jwtSecret = process.env.JWT_SECRET;
-    if (!jwtSecret) {
-      console.error('JWT_SECRET is not defined');
-      return res.status(500).json({
-        status: 'error',
-        message: 'שגיאת הגדרות שרת'
-      });
-    }
-
-    // Verify and decode JWT token
-    const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
-    console.log('Token verified:', { decoded });
-
-    // Retrieve user from database
-    const userRepository = AppDataSource.getRepository(User);
-    const userId = decoded.userId;
-
-    if (!userId) {
-      console.error('Invalid token payload:', decoded);
-      return res.status(401).json({
-        status: 'error',
-        message: 'טוקן לא תקין'
-      });
-    }
-
-    // Find user and select specific fields
-    const user = await userRepository.findOne({ 
-      where: { id: userId },
-      select: ['id', 'email', 'firstName', 'lastName', 'role'] 
-    });
-
-    if (!user) {
-      console.error('User not found for token:', { userId });
-      return res.status(401).json({
-        status: 'error',
-        message: 'משתמש לא נמצא'
-      });
-    }
-
-    // Attach user to request for downstream handlers
-    req.user = user;
-    console.log('Auth successful:', { userId: user.id, role: user.role });
-
+    await guard.canActivate({
+      switchToHttp: () => ({
+        getRequest: () => req
+      })
+    } as ExecutionContext);
     next();
   } catch (error) {
-    console.error('Auth middleware error:', error);
-    
-    // Handle specific JWT errors
-    if (error instanceof jwt.JsonWebTokenError) {
-      return res.status(401).json({
-        status: 'error',
-        message: 'טוקן לא תקין'
-      });
-    }
-    if (error instanceof jwt.TokenExpiredError) {
-      return res.status(401).json({
-        status: 'error',
-        message: 'טוקן פג תוקף'
-      });
-    }
-    
-    // Generic authentication error
-    res.status(401).json({
-      status: 'error',
-      message: 'שגיאת אימות'
-    });
+    res.status(401).json({ message: error.message });
   }
 }; 

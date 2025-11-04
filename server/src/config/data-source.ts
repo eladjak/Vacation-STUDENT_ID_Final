@@ -14,94 +14,47 @@
 
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
+import { join } from 'path';
 import { User } from '../entities/user.entity';
 import { Vacation } from '../entities/vacation.entity';
 import { VacationFollow } from '../entities/vacation-follow.entity';
-import path from 'path';
-import mysql from 'mysql2/promise';
 
-// Load environment variables from .env file
+// Load environment variables
 config();
 
-/**
- * Database Creation Function
- * 
- * Creates the MySQL database if it doesn't exist.
- * Uses environment variables for configuration with fallback values.
- * 
- * Database Features:
- * - UTF-8 character set (utf8mb4)
- * - Unicode collation
- * - Automatic creation if missing
- * 
- * @throws Error if database creation fails
- */
-const createDatabase = async () => {
+const AppDataSource = new DataSource({
+  type: 'mysql',
+  host: process.env.DB_HOST || 'localhost',
+  port: parseInt(process.env.DB_PORT || '3306', 10),
+  username: process.env.DB_USERNAME || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'vacation_db',
+  entities: [join(__dirname, '..', 'entities', '*.entity{.ts,.js}')],
+  migrations: [join(__dirname, '..', 'migrations', '*{.ts,.js}')],
+  synchronize: process.env.NODE_ENV !== 'production',
+  logging: process.env.NODE_ENV === 'development',
+  migrationsRun: true,
+  migrationsTableName: 'migrations',
+  charset: 'utf8mb4'
+});
+
+export const initializeDataSource = async () => {
   try {
-    const connection = await mysql.createConnection({
-      host: process.env.DB_HOST || 'localhost',
-      port: Number(process.env.DB_PORT) || 3306,
-      user: process.env.DB_USERNAME || 'root',
-      password: process.env.DB_PASSWORD || ''
-    });
-
-    await connection.query(
-      `CREATE DATABASE IF NOT EXISTS ${process.env.DB_DATABASE || 'vacation_db'} 
-       CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
-    );
-
-    await connection.end();
-    console.log('Database created or already exists');
+    if (!AppDataSource.isInitialized) {
+      await AppDataSource.initialize();
+      console.log('Data Source has been initialized!');
+    }
+    return AppDataSource;
   } catch (error) {
-    console.error('Error creating database:', error);
+    console.error('Error during Data Source initialization:', error);
     throw error;
   }
 };
 
-/**
- * TypeORM Data Source Configuration
- * 
- * Main database connection configuration using TypeORM.
- * Configures all aspects of the database connection and ORM behavior.
- * 
- * Configuration Features:
- * - Environment variable based configuration
- * - Development mode SQL logging
- * - Entity registration
- * - Migration support
- * - UTF-8 character encoding
- */
-export const AppDataSource = new DataSource({
-  type: 'mysql',
-  host: process.env.DB_HOST || 'localhost',
-  port: Number(process.env.DB_PORT) || 3306,
-  username: process.env.DB_USERNAME || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_DATABASE || 'vacation_db',
-  synchronize: true,                                    // Auto-create database schema (development only)
-  logging: process.env.NODE_ENV === 'development',      // SQL logging in development mode
-  entities: [User, Vacation, VacationFollow],           // Entity classes
-  migrations: [],                                       // Database migrations
-  subscribers: [],                                      // Entity subscribers
-  charset: 'utf8mb4'                                   // Full UTF-8 support
-});
+export const getRepository = async <T>(entity: any) => {
+  const dataSource = await initializeDataSource();
+  return dataSource.getRepository<T>(entity);
+};
 
-/**
- * Database Initialization Function
- * 
- * Handles the complete database initialization process:
- * 1. Creates database if it doesn't exist
- * 2. Initializes TypeORM connection
- * 
- * @throws Error if initialization fails
- */
-export const initializeDatabase = async () => {
-  try {
-    await createDatabase();
-    await AppDataSource.initialize();
-    console.log('Database connection initialized successfully');
-  } catch (error) {
-    console.error('Error initializing database:', error);
-    throw error;
-  }
-}; 
+export { AppDataSource };
+export default AppDataSource; 
