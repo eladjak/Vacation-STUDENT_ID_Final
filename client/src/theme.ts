@@ -1,58 +1,57 @@
 /**
- * Material-UI Theme Configuration
- * 
- * Customizes the application's visual appearance
- * Features:
- * - Custom color palette
- * - Typography settings
- * - Component overrides
- * - RTL support
- * - Responsive breakpoints
- * - Custom shadows
- * - Transitions
+ * Material-UI Theme Configuration — Dark Mode
+ *
+ * Dark glassmorphism theme with purple/cyan accents.
+ * Inspired by the portfolio at fullstack-eladjak.co.il
  */
 
 import { createTheme } from '@mui/material/styles';
 import { heIL } from '@mui/material/locale';
 
-// Custom color palette
+// Custom color palette — dark mode
 const palette = {
+  mode: 'dark' as const,
   primary: {
-    main: '#2196f3',
-    light: '#64b5f6',
-    dark: '#1976d2',
+    main: '#a855f7',      // vivid purple
+    light: '#c084fc',
+    dark: '#7c3aed',
     contrastText: '#ffffff'
   },
   secondary: {
-    main: '#f50057',
-    light: '#ff4081',
-    dark: '#c51162',
-    contrastText: '#ffffff'
+    main: '#22d3ee',      // cyan
+    light: '#67e8f9',
+    dark: '#0891b2',
+    contrastText: '#0a0a1a'
   },
   error: {
-    main: '#f44336',
-    light: '#e57373',
-    dark: '#d32f2f'
+    main: '#f87171',
+    light: '#fca5a5',
+    dark: '#dc2626'
   },
   warning: {
-    main: '#ff9800',
-    light: '#ffb74d',
-    dark: '#f57c00'
+    main: '#fbbf24',
+    light: '#fcd34d',
+    dark: '#d97706'
   },
   info: {
-    main: '#2196f3',
-    light: '#64b5f6',
-    dark: '#1976d2'
+    main: '#38bdf8',
+    light: '#7dd3fc',
+    dark: '#0284c7'
   },
   success: {
-    main: '#4caf50',
-    light: '#81c784',
-    dark: '#388e3c'
+    main: '#34d399',
+    light: '#6ee7b7',
+    dark: '#059669'
   },
   background: {
-    default: '#f5f5f5',
-    paper: '#ffffff'
-  }
+    default: '#05080f',   // near-black blue-tinted
+    paper: '#0d1117'      // dark card background
+  },
+  text: {
+    primary: '#f1f5f9',
+    secondary: '#94a3b8'
+  },
+  divider: 'rgba(168, 85, 247, 0.15)'
 };
 
 // Typography configuration
@@ -63,56 +62,85 @@ const typography = {
     'Arial',
     'sans-serif'
   ].join(','),
-  h1: {
-    fontSize: '2.5rem',
-    fontWeight: 500
-  },
-  h2: {
-    fontSize: '2rem',
-    fontWeight: 500
-  },
-  h3: {
-    fontSize: '1.75rem',
-    fontWeight: 500
-  },
-  h4: {
-    fontSize: '1.5rem',
-    fontWeight: 500
-  },
-  h5: {
-    fontSize: '1.25rem',
-    fontWeight: 500
-  },
-  h6: {
-    fontSize: '1rem',
-    fontWeight: 500
-  },
-  body1: {
-    fontSize: '1rem',
-    lineHeight: 1.5
-  },
-  body2: {
-    fontSize: '0.875rem',
-    lineHeight: 1.43
-  }
+  h1: { fontSize: '2.5rem', fontWeight: 600 },
+  h2: { fontSize: '2rem', fontWeight: 600 },
+  h3: { fontSize: '1.75rem', fontWeight: 600 },
+  h4: { fontSize: '1.5rem', fontWeight: 600 },
+  h5: { fontSize: '1.25rem', fontWeight: 500 },
+  h6: { fontSize: '1rem', fontWeight: 500 },
+  body1: { fontSize: '1rem', lineHeight: 1.6 },
+  body2: { fontSize: '0.875rem', lineHeight: 1.5 }
 };
 
-// Component overrides
+// Component overrides — glassmorphism style
 const components = {
-  MuiButton: {
+  MuiCssBaseline: {
+    styleOverrides: {
+      body: {
+        background: 'linear-gradient(135deg, #05080f 0%, #0a0d1a 50%, #070b16 100%)',
+        minHeight: '100vh',
+        scrollbarColor: '#a855f7 #0d1117',
+        '&::-webkit-scrollbar': { width: '6px' },
+        '&::-webkit-scrollbar-track': { background: '#0d1117' },
+        '&::-webkit-scrollbar-thumb': {
+          background: 'linear-gradient(180deg, #a855f7, #22d3ee)',
+          borderRadius: '3px'
+        }
+      }
+    }
+  },
+  MuiAppBar: {
     styleOverrides: {
       root: {
-        borderRadius: 8,
-        textTransform: 'none',
-        fontWeight: 500
+        background: 'rgba(5, 8, 15, 0.85) !important',
+        backdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(168, 85, 247, 0.2)',
+        boxShadow: '0 4px 30px rgba(0,0,0,0.4)',
+        color: '#f1f5f9'
       }
     }
   },
   MuiCard: {
     styleOverrides: {
       root: {
-        borderRadius: 12,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        background: 'rgba(13, 17, 23, 0.8)',
+        backdropFilter: 'blur(16px)',
+        border: '1px solid rgba(168, 85, 247, 0.12)',
+        borderRadius: '16px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)',
+        transition: 'all 0.25s ease',
+        '&:hover': {
+          border: '1px solid rgba(168, 85, 247, 0.4)',
+          boxShadow: '0 12px 48px rgba(168, 85, 247, 0.15), 0 8px 32px rgba(0,0,0,0.6)',
+          transform: 'translateY(-2px)'
+        }
+      }
+    }
+  },
+  MuiButton: {
+    styleOverrides: {
+      root: {
+        borderRadius: '10px',
+        textTransform: 'none' as const,
+        fontWeight: 600,
+        transition: 'all 0.2s ease'
+      },
+      contained: {
+        background: 'linear-gradient(135deg, #a855f7, #7c3aed)',
+        boxShadow: '0 4px 15px rgba(168, 85, 247, 0.35)',
+        '&:hover': {
+          background: 'linear-gradient(135deg, #c084fc, #a855f7)',
+          boxShadow: '0 6px 20px rgba(168, 85, 247, 0.5)',
+          transform: 'translateY(-1px)'
+        }
+      },
+      outlined: {
+        borderColor: 'rgba(168, 85, 247, 0.5)',
+        color: '#a855f7',
+        '&:hover': {
+          borderColor: '#a855f7',
+          background: 'rgba(168, 85, 247, 0.08)'
+        }
       }
     }
   },
@@ -120,8 +148,100 @@ const components = {
     styleOverrides: {
       root: {
         '& .MuiOutlinedInput-root': {
-          borderRadius: 8
+          borderRadius: '10px',
+          background: 'rgba(255,255,255,0.03)',
+          '& fieldset': { borderColor: 'rgba(168, 85, 247, 0.25)' },
+          '&:hover fieldset': { borderColor: 'rgba(168, 85, 247, 0.5)' },
+          '&.Mui-focused fieldset': { borderColor: '#a855f7' }
+        },
+        '& .MuiInputLabel-root': { color: '#94a3b8' },
+        '& .MuiInputLabel-root.Mui-focused': { color: '#a855f7' }
+      }
+    }
+  },
+  MuiPaper: {
+    styleOverrides: {
+      root: {
+        background: 'rgba(13, 17, 23, 0.9)',
+        backgroundImage: 'none',
+        border: '1px solid rgba(168, 85, 247, 0.1)'
+      }
+    }
+  },
+  MuiDialog: {
+    styleOverrides: {
+      paper: {
+        background: 'rgba(13, 17, 23, 0.97)',
+        border: '1px solid rgba(168, 85, 247, 0.2)',
+        backdropFilter: 'blur(20px)',
+        borderRadius: '16px'
+      }
+    }
+  },
+  MuiDrawer: {
+    styleOverrides: {
+      paper: {
+        background: 'rgba(5, 8, 15, 0.97)',
+        borderLeft: '1px solid rgba(168, 85, 247, 0.2)'
+      }
+    }
+  },
+  MuiChip: {
+    styleOverrides: {
+      root: {
+        background: 'rgba(168, 85, 247, 0.15)',
+        border: '1px solid rgba(168, 85, 247, 0.3)',
+        color: '#c084fc'
+      }
+    }
+  },
+  MuiIconButton: {
+    styleOverrides: {
+      root: {
+        '&:hover': {
+          background: 'rgba(168, 85, 247, 0.12)'
         }
+      }
+    }
+  },
+  MuiListItem: {
+    styleOverrides: {
+      root: {
+        borderRadius: '8px',
+        '&:hover': {
+          background: 'rgba(168, 85, 247, 0.08)'
+        },
+        '&.Mui-selected': {
+          background: 'rgba(168, 85, 247, 0.15)',
+          '&:hover': {
+            background: 'rgba(168, 85, 247, 0.2)'
+          }
+        }
+      }
+    }
+  },
+  MuiAvatar: {
+    styleOverrides: {
+      root: {
+        background: 'linear-gradient(135deg, #a855f7, #22d3ee)'
+      }
+    }
+  },
+  MuiDivider: {
+    styleOverrides: {
+      root: {
+        borderColor: 'rgba(168, 85, 247, 0.12)'
+      }
+    }
+  },
+  MuiTooltip: {
+    styleOverrides: {
+      tooltip: {
+        background: 'rgba(13, 17, 23, 0.95)',
+        border: '1px solid rgba(168, 85, 247, 0.3)',
+        backdropFilter: 'blur(10px)',
+        color: '#f1f5f9',
+        fontSize: '0.8rem'
       }
     }
   }
@@ -134,9 +254,7 @@ export const theme = createTheme(
     palette,
     typography,
     components,
-    shape: {
-      borderRadius: 8
-    }
+    shape: { borderRadius: 10 }
   },
   heIL // Hebrew locale
-); 
+);
