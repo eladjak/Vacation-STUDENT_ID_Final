@@ -35,6 +35,7 @@ import { Visibility, VisibilityOff, Info } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { loginStart, loginSuccess, loginFailure } from '../../store/slices/authSlice';
 import { authService } from '../../services/auth.service';
+import { setDemoMode, DEMO_USER, DEMO_TOKEN } from '../../services/demo-mode';
 
 /**
  * Validation schema for login form
@@ -106,6 +107,11 @@ const Login: React.FC = () => {
 
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+  };
+
+  const handleGuestLogin = () => {
+    setDemoMode(true);
+    dispatch(loginSuccess({ user: DEMO_USER, token: DEMO_TOKEN }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -319,9 +325,9 @@ const Login: React.FC = () => {
               fullWidth
               variant="contained"
               disabled={isSubmitting}
-              sx={{ 
-                mt: 3, 
-                mb: 2,
+              sx={{
+                mt: 3,
+                mb: 1,
                 height: 48,
                 borderRadius: 1,
                 fontSize: '1.1rem',
@@ -342,6 +348,31 @@ const Login: React.FC = () => {
               )}
             </Button>
           </form>
+
+          <Button
+            fullWidth
+            variant="outlined"
+            onClick={handleGuestLogin}
+            disabled={isSubmitting}
+            sx={{
+              mt: 1,
+              mb: 2,
+              height: 48,
+              borderRadius: 1,
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              borderColor: 'success.main',
+              color: 'success.main',
+              '&:hover': {
+                borderColor: 'success.dark',
+                backgroundColor: 'success.light',
+                color: 'success.contrastText',
+                transform: 'translateY(-1px)',
+              },
+            }}
+          >
+            כניסה כאורח (דמו)
+          </Button>
         </Paper>
       </Box>
     </Container>

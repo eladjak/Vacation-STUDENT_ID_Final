@@ -13,6 +13,7 @@
 
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { getIsDemoMode, setDemoMode, handleDemoRequest } from './demo-mode';
 
 // Create custom axios instance
 const instance = axios.create({
@@ -110,7 +111,19 @@ instance.interceptors.response.use(
           toast.error('שגיאה לא צפויה - נסה שוב');
       }
     } else if (error.request) {
-      // Request made but no response
+      // Request made but no response - try demo mode
+      if (!getIsDemoMode()) {
+        setDemoMode(true);
+        console.log('🔄 מצב הדגמה - השרת לא זמין, משתמש בנתוני דמו');
+      }
+      const demoResult = handleDemoRequest(
+        error.config?.method?.toUpperCase() || 'GET',
+        error.config?.url || '',
+        error.config?.data
+      );
+      if (demoResult) {
+        return Promise.resolve({ ...demoResult, config: error.config, headers: {}, statusText: 'OK' });
+      }
       toast.error('לא ניתן להתחבר לשרת - בדוק את החיבור לאינטרנט');
     } else {
       // Request setup error
