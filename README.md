@@ -148,3 +148,8 @@ vacation-vibe/
 
 ## 📄 רישיון
 כל הזכויות שמורות © 2024 אלעד יעקובוביץ'
+---
+
+⭐ If you find this useful, please star the repo!
+
+*[README בעברית](README.he.md)*
